@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const { timeStamp } = require('console');
 
 const userSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     profilePicture: { type: String }, 
     password: { type: String, required: true },

@@ -19,6 +19,8 @@
   "homepage": "https://github.com/dareen-soliman/SoftwareProject#readme",
   "dependencies": {
     "dotenv": "^16.4.7",
-    "mongoose": "^8.12.1"
+    "install": "^0.13.0",
+    "mongoose": "^8.12.1",
+    "nodemon": "^3.1.9"
   }
 }

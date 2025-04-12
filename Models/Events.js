@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const EventSchema = new mongoose.Schema({
+    status: { type: String, enum: ["pending", "approved", "declined"], default: "pending" },
     title: { type: String, required: true },
     description: { type: String, required: true },
     date: { type: Date, required: true },

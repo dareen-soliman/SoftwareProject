@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const eventController = require("../Controllers/EventsController");
-const authorizationMiddleware = require("C:\Users\Ismail\Desktop\SProject\SoftwareProject\Middleware\authorizationMiddleware.js");
-const authenticationMiddleware = require("C:\Users\Ismail\Desktop\SProject\SoftwareProject\Middleware\authenticationMiddleware.js");
+const authenticationMiddleware = require('../Middleware/authenticationMiddleware');
+const authorizationMiddleware = require('../Middleware/authorizationMiddleware');
+
 
 // * Create a new event (Organizer only)
 router.post("/", authenticationMiddleware, authorizationMiddleware(["organizer"]), eventController.createEvent);

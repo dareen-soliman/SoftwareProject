@@ -1,8 +1,9 @@
 // server.js
+
 const express = require('express');
 const connectDB = require("./config/db"); // Import database connection logic
 const cookieParser = require('cookie-parser'); // Optional: if using cookies for authentication
-
+require('dotenv').config();
 // Import your routes
 //const eventRoutes = require('C:\Users\Ismail\Desktop\SProject\SoftwareProject\Routes\events.js'); // Modify with your actual route file
 

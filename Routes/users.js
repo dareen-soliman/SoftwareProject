@@ -1,16 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const { getUsers, getUserById, updateUserRole, deleteUser, getUserProfile, updateUserProfile ,register, login , forgetPassword } = require("../controllers/userController");
+const { getUsers, getUserById, updateUserRole, deleteUser, getUserProfile, updateUserProfile ,registerUser, loginUser , forgetPassword       } = require("../Controllers/UsersController");
 
 
-const { protect, isAdmin } = require("../middleware/authMiddleware");
+/* const { protect, isAdmin } = require("../Middleware/authMiddleware"); */
 
-router.post("/register", register);
-router.post("/login", login);
+router.post("/register", registerUser);
+router.post("/login", loginUser);
 router.put("/forgetPassword", forgetPassword);
 
 
-router.get("/", protect, isAdmin, getUsers); // Admin-only route
+router.get("/", protect, isAdmin, getAllUsers); // Admin-only route
 router.get("/profile", protect, getUserProfile); // Authenticated users
 router.put("/profile", protect, updateUserProfile);// Authenticated users 
 router.get("/:id", protect, isAdmin, getUserById); // Admin-only route

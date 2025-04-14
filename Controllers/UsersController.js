@@ -113,3 +113,33 @@ exports.loginUser = async (req, res) => {
         res.status(500).json({ message: 'Error logging in', error });
     }
 };
+
+
+// Forget password
+exports.forgetPassword = async (req, res) => {
+    try {
+        const { email, age, newPassword } = req.body;
+
+        // Find the user by email
+        const user = await Users.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Verify the age
+        if (user.age !== age) {
+            return res.status(400).json({ message: 'Incorrect age provided' });
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update the user's password
+        user.password = hashedPassword;
+        await user.save();
+
+        res.status(200).json({ message: 'Password reset successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error resetting password', error });
+    }
+};

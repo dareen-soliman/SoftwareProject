@@ -4,12 +4,14 @@ const eventController = require("../Controllers/EventsController");
 const authenticationMiddleware = require('../Middleware/authenticationMiddleware');
 const authorizationMiddleware = require('../Middleware/authorizationMiddleware');
 
-
 // * Create a new event (Organizer only)
 router.post("/", authenticationMiddleware, authorizationMiddleware(["organizer"]), eventController.createEvent);
 
 // * Get all approved events (Public)
 router.get("/", eventController.getAllEvents);
+
+// * Get organizer analytics (Organizer only)
+router.get("/organizer/analytics", authenticationMiddleware, authorizationMiddleware(["organizer"]), eventController.getOrganizerAnalytics);
 
 // * Get a specific event by ID (Public)
 router.get("/:id", eventController.getEventById);
@@ -22,8 +24,5 @@ router.delete("/:id", authenticationMiddleware, authorizationMiddleware(["organi
 
 // * Update event status (Admin only)
 router.patch("/:id/status", authenticationMiddleware, authorizationMiddleware(["admin"]), eventController.updateStatus);
-
-// * Get organizer analytics (Organizer only)
-router.get("/organizer/analytics", authenticationMiddleware, authorizationMiddleware(["organizer"]), eventController.getOrganizerAnalytics);
 
 module.exports = router;

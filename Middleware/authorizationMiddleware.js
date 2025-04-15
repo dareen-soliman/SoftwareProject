@@ -1,9 +1,8 @@
-// Middleware/authorizationMiddleware.js
-
-module.exports = function(requiredRole) {
-  return function (req, res, next) {
-    if (!req.user || req.user.role !== requiredRole) {
-      return res.status(403).json({ message: "Forbidden: Access denied" });
+module.exports = function authorizationMiddleware(roles) {
+  return (req, res, next) => {
+    const userRole = req.user.role;
+    if (!roles.includes(userRole)) {
+      return res.status(403).json("Unauthorized access");
     }
     next();
   };

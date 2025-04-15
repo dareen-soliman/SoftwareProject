@@ -6,12 +6,12 @@ const cookieParser = require('cookie-parser'); // Optional: if using cookies for
 // Import your routes
 //const eventRoutes = require('C:\Users\Ismail\Desktop\SProject\SoftwareProject\Routes\events.js'); // Modify with your actual route file
 
-app.use('/api/v1/bookings', bookingRoutes);
+
 const bookingRoutes = require('./Routes/bookings'); 
 const eventRoutes = require('./Routes/events'); 
 // Initialize the Express app
 const app = express();
-
+app.use('/api/v1/bookings', bookingRoutes);
 // Connect to the database
 connectDB(); // Call the function that connects to your database
 

@@ -1,7 +1,6 @@
 const Event = require("../Models/Events.js");
 
 const eventController = {
-  // POST /api/v1/events - Organizer only
   createEvent: async (req, res) => {
     try {
       if (req.user.role !== "organizer") {
@@ -40,7 +39,15 @@ const eventController = {
     }
   },
 
-  // GET /api/v1/events/:id - Public
+  getAllEvents: async (req, res) => {
+    try {
+      const events = await Event.find({ status: "approved" }).populate("organizer", "name");
+      res.status(200).json(events);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+  },
+
   getEventById: async (req, res) => {
     try {
       const event = await Event.findById(req.params.id).populate("organizer", "name");
@@ -53,7 +60,6 @@ const eventController = {
     }
   },
 
-  // PUT /api/v1/events/:id - Organizer or Admin
   updateEvent: async (req, res) => {
     try {
       const event = await Event.findById(req.params.id);
@@ -70,7 +76,6 @@ const eventController = {
 
       const { date, location, totalTickets, ticketPrice } = req.body;
 
-      // Check if there's a decrease in total tickets
       if (totalTickets < event.totalTickets - event.remainingTickets) {
         return res.status(400).json({ message: "Insufficient tickets available for this update" });
       }
@@ -87,7 +92,6 @@ const eventController = {
     }
   },
 
-  // DELETE /api/v1/events/:id - Organizer or Admin
   deleteEvent: async (req, res) => {
     try {
       const event = await Event.findById(req.params.id);
@@ -109,7 +113,6 @@ const eventController = {
     }
   },
 
-  // PATCH /api/v1/events/:id/status - Admin only
   updateStatus: async (req, res) => {
     try {
       if (req.user.role !== "admin") {
@@ -135,7 +138,6 @@ const eventController = {
     }
   },
 
-  // GET /api/v1/events/organizer/analytics - Organizer only
   getOrganizerAnalytics: async (req, res) => {
     try {
       if (req.user.role !== "organizer") {

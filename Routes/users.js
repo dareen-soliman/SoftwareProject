@@ -7,11 +7,7 @@ const {
     getAllUsers,
     getUserById,
     deleteUser,
-    getUserProfile,
     updateUser,
-    registerUser,
-    loginUser,
-    forgetPassword,
     getCurrentUser
 } = require("../Controllers/UsersController");
 

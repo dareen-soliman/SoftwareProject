@@ -30,30 +30,4 @@ const userSchema = new mongoose.Schema({
 });
 
 
-/* userSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
-    try {
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-        next();
-    } catch (error) {
-        next(error);
-    }
-});
-
-// Method to compare passwords
-userSchema.methods.comparePassword = async function (candidatePassword) {
-    return await bcrypt.compare(candidatePassword, this.password);
-};
-
-// Virtual field for full name
-userSchema.virtual('fullName').get(function () {
-    return `${this.firstName} ${this.lastName}`;
-});
-
-// Index for email
-userSchema.index({ email: 1 }); 
-
-*/
-
 module.exports = mongoose.model('User', userSchema);

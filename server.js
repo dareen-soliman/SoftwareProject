@@ -22,7 +22,14 @@ const app = express();
 
 // Middleware setup
 
-app.use(express.json());
+app.use((req, res, next) => {
+  if (req.method === 'GET') {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
+
 app.use(cookieParser());
 
 
@@ -43,7 +50,7 @@ app.use("/api/v1/events", eventRoutes);
 
 
 // Set the port (use an environment variable if available)
-const port = process.env.PORT || 5000; // Default to port 5000
+const port = process.env.PORT || 3000; // Default to port 5000
 
 // Start the server
 app.listen(port, () => {

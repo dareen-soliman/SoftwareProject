@@ -13,7 +13,7 @@ const authorize = require('../Middleware/authorizationMiddleware');
 
 
 
-router.post('/',authorize(['standard']), createBooking);
+router.post('/',authorize(['standard','admin']), createBooking);
 router.get('/',authorize(['standard']), getUserBookings);
 router.get('/:id', authorize(['standard']), getBookingById);
 router.delete('/:id',authorize(['standard']), cancelBooking);

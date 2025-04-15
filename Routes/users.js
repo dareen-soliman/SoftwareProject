@@ -1,22 +1,29 @@
 const express = require("express");
 const router = express.Router();
-const { getUsers, getUserById, updateUserRole, deleteUser, getUserProfile, updateUserProfile ,register, login , forgetPassword } = require("../controllers/userController");
+
+const authorizationMiddleware = require('../Middleware/authorizationMiddleware');
+
+const {
+    getAllUsers,
+    getUserById,
+    deleteUser,
+    updateUser,
+    getCurrentUser
+} = require("../Controllers/UsersController");
 
 
-const { protect, isAdmin } = require("../middleware/authMiddleware");
-
-router.post("/register", register);
-router.post("/login", login);
-router.put("/forgetPassword", forgetPassword);
+// Authenticated user routes
 
 
-router.get("/", protect, isAdmin, getUsers); // Admin-only route
-router.get("/profile", protect, getUserProfile); // Authenticated users
-router.put("/profile", protect, updateUserProfile);// Authenticated users 
-router.get("/:id", protect, isAdmin, getUserById); // Admin-only route
-router.put("/:id", protect, isAdmin, updateUserRole); // Admin-only route
-router.delete("/:id", protect, isAdmin, deleteUser); // Admin-only route
+///////////////////////////////////////////////////////////////
+// missing get user profile method
+router.get("/profile", getCurrentUser);
+router.put("/profile", updateUser);
 
 
+router.get("/",authorizationMiddleware(['admin']), getAllUsers);
+router.get("/:id" , authorizationMiddleware(["admin"]), getUserById);
+router.put("/:id", authorizationMiddleware(["admin"]), updateUser);
+router.delete("/:id", authorizationMiddleware(["admin"]), deleteUser);
 
 module.exports = router;

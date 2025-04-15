@@ -8,14 +8,14 @@ const {
   cancelBooking
 } = require('../Controllers/BookingsController');
 
-const authenticate = require('../Middleware/authenticationMiddleware');
+
 const authorize = require('../Middleware/authorizationMiddleware');
 
-router.use(authenticate); 
 
-router.post('/', authorize(['standard']), createBooking);
-router.get('/', authorize(['standard']), getUserBookings);
+
+router.post('/',authorize(['standard']), createBooking);
+router.get('/',authorize(['standard']), getUserBookings);
 router.get('/:id', authorize(['standard']), getBookingById);
-router.delete('/:id', authorize(['standard']), cancelBooking);
+router.delete('/:id',authorize(['standard']), cancelBooking);
 
 module.exports = router;

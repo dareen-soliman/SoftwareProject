@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const secretKey = process.env.SECRET_KEY
+const secretKey = process.env.JWT_SECRET
 
 module.exports = function authenticationMiddleware(req, res, next) {
   const cookie = req.cookies; // if not working, try req.headers.cookie to extract token

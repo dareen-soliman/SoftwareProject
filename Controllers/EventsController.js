@@ -28,7 +28,7 @@ const eventController = {
         ticketPrice,
         totalTickets,
         remainingTickets: totalTickets,
-        organizer: req.user.userId,
+        organizer: req.user._id,
         status: "pending",
       });
 

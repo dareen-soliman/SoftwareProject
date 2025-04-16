@@ -11,7 +11,7 @@ router.post("/",authorizationMiddleware(["organizer"]), eventController.createEv
 router.get("/", eventController.getAllEvents);
 
 // * Get organizer analytics (Organizer only)
-router.get("/organizer/analytics",authorizationMiddleware(["organizer"]), eventController.getOrganizerAnalytics);
+//router.get("/organizer/analytics",authorizationMiddleware(["organizer"]), eventController.getOrganizerAnalytics);
 
 
 // * Get a specific event by ID (Public)

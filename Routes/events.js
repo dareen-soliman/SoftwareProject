@@ -13,6 +13,7 @@ router.get("/", eventController.getAllEvents);
 // * Get organizer analytics (Organizer only)
 router.get("/organizer/analytics",authorizationMiddleware(["organizer"]), eventController.getOrganizerAnalytics);
 
+
 // * Get a specific event by ID (Public)
 router.get("/:id", eventController.getEventById);
 

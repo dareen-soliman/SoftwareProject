@@ -138,29 +138,29 @@ const eventController = {
     }
   },
 
-  getOrganizerAnalytics: async (req, res) => {
-    try {
-      if (req.user.role !== "organizer") {
-        return res.status(403).json({ message: "Access denied" });
-      }
+  // getOrganizerAnalytics: async (req, res) => {
+  //   try {
+  //     if (req.user.role !== "organizer") {
+  //       return res.status(403).json({ message: "Access denied" });
+  //     }
 
-      const events = await Event.find({ organizer: req.user.userId });
+  //     const events = await Event.find({ organizer: req.user.userId });
 
-      const analytics = events.map((event) => {
-        const booked = event.totalTickets - event.remainingTickets;
-        const percentageBooked = ((booked / event.totalTickets) * 100).toFixed(2);
+  //     const analytics = events.map((event) => {
+  //       const booked = event.totalTickets - event.remainingTickets;
+  //       const percentageBooked = ((booked / event.totalTickets) * 100).toFixed(2);
 
-        return {
-          title: event.title,
-          percentageBooked,
-        };
-      });
+  //       return {
+  //         title: event.title,
+  //         percentageBooked,
+  //       };
+  //     });
 
-      res.status(200).json(analytics);
-    } catch (error) {
-      res.status(500).json({ message: "Internal server error", error: error.message });
-    }
-  },
+  //     res.status(200).json(analytics);
+  //   } catch (error) {
+  //     res.status(500).json({ message: "Internal server error", error: error.message });
+  //   }
+  // },
 };
 
 module.exports = eventController;

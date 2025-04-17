@@ -1,4 +1,6 @@
 const Users = require('../Models/Users');
+const Booking = require('../Models/Bookings'); 
+const Event = require('../Models/Events');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -150,5 +152,62 @@ exports.forgetPassword = async (req, res) => {
         res.status(200).json({ message: 'Password reset successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Error resetting password', error });
+    }
+};
+
+exports.getCurrentUserBookings = async (req, res) => {
+    try {
+        console.log("Current User:", req.user); // Check this in your terminal
+
+        const bookings = await Booking.find({ user: req.user._id })
+            .populate('event')
+            .sort({ createdAt: -1 });
+
+        res.status(200).json(bookings);
+    } catch (error) {
+        console.error("Booking fetch error:", error); // Log the actual error
+        res.status(500).json({ message: 'Error fetching bookings', error });
+    }
+}; 
+
+exports.getCurrentUserEvents = async (req, res) => {
+    try {
+        const userId = req.user._id; // Logged-in user's ID
+
+        const events = await Event.find({ organizer: userId }).sort({ createdAt: -1 });
+
+        res.status(200).json(events);
+    } catch (error) {
+        console.error("Error fetching user's events:", error);
+        res.status(500).json({ message: "Error fetching user's events", error });
+    }
+};
+
+exports.getEventAnalytics = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        // Fetch events created by this organizer
+        const events = await Event.find({ organizer: userId });
+
+        // Calculate analytics
+        const analytics = events.map(event => {
+            const ticketsSold = event.totalTickets - event.remainingTickets;
+            const percentageBooked = ((ticketsSold / event.totalTickets) * 100).toFixed(2);
+
+            return {
+                eventId: event._id,
+                title: event.title,
+                percentageBooked: Number(percentageBooked),
+                ticketsSold,
+                totalTickets: event.totalTickets,
+                date: event.date,
+            };
+        });
+
+        res.status(200).json(analytics);
+    } catch (error) {
+        console.error("Error generating event analytics:", error);
+        res.status(500).json({ message: "Failed to generate event analytics", error });
     }
 };

@@ -46,7 +46,7 @@ const eventController = {
     } catch (error) {
       res.status(500).json({ message: "Internal server error", error: error.message });
     }
-  },
+  },                   // gets all approved events // 
 
   getEventById: async (req, res) => {
     try {
@@ -67,9 +67,10 @@ const eventController = {
         return res.status(404).json({ message: "Event not found" });
       }
 
-      const isOrganizer = req.user.userId === event.organizer.toString();
+      const isOrganizer = req.user._id === event.organizer.toString();
       const isAdmin = req.user.role === "admin";
-
+      console.log(req.user._id, event.organizer.toString()); 
+    
       if (!isOrganizer && !isAdmin) {
         return res.status(403).json({ message: "Access denied" });
       }
@@ -99,7 +100,7 @@ const eventController = {
         return res.status(404).json({ message: "Event not found" });
       }
 
-      const isOrganizer = req.user.userId === event.organizer.toString();
+      const isOrganizer = req.user._id === event.organizer.toString();
       const isAdmin = req.user.role === "admin";
 
       if (!isOrganizer && !isAdmin) {

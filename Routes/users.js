@@ -8,7 +8,7 @@ const authorizationMiddleware = require('../Middleware/authorizationMiddleware')
 //router.use(authenticationMiddleware);
 
 
-router.get("/profile", userController.getCurrentUser);
+router.get("/profile", userController.getCurrentUser); 
 router.put("/profile", userController.updateUser);
 router.get('/bookings',authorizationMiddleware(["standard"]), userController.getCurrentUserBookings); 
 router.get('/events',authorizationMiddleware(["organizer"]), userController.getCurrentUserEvents); 
@@ -19,7 +19,7 @@ router.get("/events/analytics", authorizationMiddleware(["organizer"]), userCont
 router.get("/",authorizationMiddleware(['admin']), userController.getAllUsers);
 
 router.get("/:id" , authorizationMiddleware(["admin"]), userController.getUserById);
-router.put("/:id", authorizationMiddleware(["admin"]), userController.updateUser);
+router.put("/:id", authorizationMiddleware(["admin"]), userController.updateUserById);
 router.delete("/:id", authorizationMiddleware(["admin"]), userController.deleteUser);
 
 

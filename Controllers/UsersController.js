@@ -30,27 +30,91 @@ exports.getUserById = async (req, res) => {
 
 
 // Update an existing user
-exports.updateUser = async (req, res) => {
-    
-        try {
-      
-          const user = await userModel.findByIdAndUpdate(
-            req.params.id,
-            { name: req.body.name },
-            {
-              new: true,
-            }
-          );
-          return res.status(200).json({ user, msg: "User updated successfully" });
-        } catch (error) {
-          return res.status(500).json({ message: error.message });
-        }
-      
-};
+exports.updateUserById = async (req, res) => {
+    try {
+      const allowedFields = ["role"];
+      const requestedFields = Object.keys(req.body);
+  
+      const isOnlyRoleBeingUpdated = requestedFields.every(field => allowedFields.includes(field));
+  
+      if (!isOnlyRoleBeingUpdated) {
+        return res.status(400).json({
+          message: "Only the 'role' field can be updated using this route.",
+        });
+      }
+  
+      const user = await Users.findByIdAndUpdate(
+        req.params.id,
+        { role: req.body.role },
+        { new: true }
+      );
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+
+      const filteredUser = {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        age: user.age,
+        role: user.role,
+        profilePicture: user.profilePicture,
+      };
+  
+      return res.status(200).json({ user: filteredUser ,msg: "User updated successfully"})
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  };
+  
 exports.getCurrentUser = async (req, res) => {
-    res.send(req.user);
+  res.send(req.user);
 };
 
+// Controllers/userController.js
+exports.updateUser = async (req, res) => {
+    try {
+      const user = await Users.findByIdAndUpdate(
+        req.user._id,
+        {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          age: req.body.age,
+          profilePicture: req.body.profilePicture,
+        },
+        { new: true, runValidators: true } // Ensure validators run
+      );
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      const filteredUser = {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        age: user.age,
+        role: user.role,
+        profilePicture: user.profilePicture,
+      };
+  
+      return res.status(200).json({ user: filteredUser });
+    } catch (error) {
+      // Handle duplicate email error
+      if (error.code === 11000 && error.keyValue?.email) {
+        return res.status(400).json({ message: "Email is already in use" });
+      }
+  
+      return res.status(500).json({ message: error.message });
+    }
+  };
+  
+  
 // Delete a user
 exports.deleteUser = async (req, res) => {
     try {

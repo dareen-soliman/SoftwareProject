@@ -8,10 +8,11 @@ router.use(authenticationMiddleware);
 router.use(authorizationMiddleware(['standard']));
 
 router.post('/', bookingController.createBooking);
+router.post('/', bookingController.createBooking);
 router.get('/:id', bookingController.getBookingById);
 router.delete('/:id', bookingController.cancelBooking);
 
-const authorize = require('../Middleware/authorizationMiddleware');
+
 
 
 

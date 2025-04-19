@@ -11,6 +11,6 @@ router.get("/all", authorizationMiddleware(["admin"]) ,eventController.getAllEve
 router.get("/:id", eventController.getEventById);
 router.put("/:id", authorizationMiddleware(["organizer", "admin"]), eventController.updateEvent);
 router.delete("/:id",authorizationMiddleware(["organizer", "admin"]), eventController.deleteEvent);
-router.patch("/:id/status",authorizationMiddleware(["admin"]), eventController.updateStatus);
+
 
 module.exports = router;

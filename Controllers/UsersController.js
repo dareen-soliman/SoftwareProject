@@ -1,4 +1,6 @@
 const Users = require('../Models/Users');
+const Booking = require('../Models/Bookings'); 
+const Event = require('../Models/Events');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -28,27 +30,91 @@ exports.getUserById = async (req, res) => {
 
 
 // Update an existing user
-exports.updateUser = async (req, res) => {
-    
-        try {
-      
-          const user = await userModel.findByIdAndUpdate(
-            req.params.id,
-            { name: req.body.name },
-            {
-              new: true,
-            }
-          );
-          return res.status(200).json({ user, msg: "User updated successfully" });
-        } catch (error) {
-          return res.status(500).json({ message: error.message });
-        }
-      
-};
+exports.updateUserById = async (req, res) => {
+    try {
+      const allowedFields = ["role"];
+      const requestedFields = Object.keys(req.body);
+  
+      const isOnlyRoleBeingUpdated = requestedFields.every(field => allowedFields.includes(field));
+  
+      if (!isOnlyRoleBeingUpdated) {
+        return res.status(400).json({
+          message: "Only the 'role' field can be updated using this route.",
+        });
+      }
+  
+      const user = await Users.findByIdAndUpdate(
+        req.params.id,
+        { role: req.body.role },
+        { new: true }
+      );
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+
+      const filteredUser = {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        age: user.age,
+        role: user.role,
+        profilePicture: user.profilePicture,
+      };
+  
+      return res.status(200).json({ user: filteredUser ,msg: "User updated successfully"})
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  };
+  
 exports.getCurrentUser = async (req, res) => {
-    res.send(req.user);
+  res.send(req.user);
 };
 
+// Controllers/userController.js
+exports.updateUser = async (req, res) => {
+    try {
+      const user = await Users.findByIdAndUpdate(
+        req.user._id,
+        {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          age: req.body.age,
+          profilePicture: req.body.profilePicture,
+        },
+        { new: true, runValidators: true } // Ensure validators run
+      );
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      const filteredUser = {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        age: user.age,
+        role: user.role,
+        profilePicture: user.profilePicture,
+      };
+  
+      return res.status(200).json({ user: filteredUser });
+    } catch (error) {
+      // Handle duplicate email error
+      if (error.code === 11000 && error.keyValue?.email) {
+        return res.status(400).json({ message: "Email is already in use" });
+      }
+  
+      return res.status(500).json({ message: error.message });
+    }
+  };
+  
+  
 // Delete a user
 exports.deleteUser = async (req, res) => {
     try {
@@ -150,5 +216,62 @@ exports.forgetPassword = async (req, res) => {
         res.status(200).json({ message: 'Password reset successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Error resetting password', error });
+    }
+};
+
+exports.getCurrentUserBookings = async (req, res) => {
+    try {
+        console.log("Current User:", req.user); // Check this in your terminal
+
+        const bookings = await Booking.find({ user: req.user._id })
+            .populate('event')
+            .sort({ createdAt: -1 });
+
+        res.status(200).json(bookings);
+    } catch (error) {
+        console.error("Booking fetch error:", error); // Log the actual error
+        res.status(500).json({ message: 'Error fetching bookings', error });
+    }
+}; 
+
+exports.getCurrentUserEvents = async (req, res) => {
+    try {
+        const userId = req.user._id; // Logged-in user's ID
+
+        const events = await Event.find({ organizer: userId }).sort({ createdAt: -1 });
+
+        res.status(200).json(events);
+    } catch (error) {
+        console.error("Error fetching user's events:", error);
+        res.status(500).json({ message: "Error fetching user's events", error });
+    }
+};
+
+exports.getEventAnalytics = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        // Fetch events created by this organizer
+        const events = await Event.find({ organizer: userId });
+
+        // Calculate analytics
+        const analytics = events.map(event => {
+            const ticketsSold = event.totalTickets - event.remainingTickets;
+            const percentageBooked = ((ticketsSold / event.totalTickets) * 100).toFixed(2);
+
+            return {
+                eventId: event._id,
+                title: event.title,
+                percentageBooked: Number(percentageBooked),
+                ticketsSold,
+                totalTickets: event.totalTickets,
+                date: event.date,
+            };
+        });
+
+        res.status(200).json(analytics);
+    } catch (error) {
+        console.error("Error generating event analytics:", error);
+        res.status(500).json({ message: "Failed to generate event analytics", error });
     }
 };

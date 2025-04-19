@@ -11,7 +11,6 @@ router.post('/', bookingController.createBooking);
 router.get('/:id', bookingController.getBookingById);
 router.delete('/:id', bookingController.cancelBooking);
 
-<<<<<<< HEAD
 const authorize = require('../Middleware/authorizationMiddleware');
 
 
@@ -22,6 +21,3 @@ router.get('/:id', authorize(['standard']), getBookingById);
 router.delete('/:id',authorize(['standard']), cancelBooking);
 
 module.exports = router;
-=======
-module.exports = router;
->>>>>>> 1c312f2565c803bd53cbc71b71044e3c802ea917

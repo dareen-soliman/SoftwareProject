@@ -3,6 +3,8 @@ const Booking = require('../Models/Bookings');
 const Event = require('../Models/Events');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const generateOTP = require('../utils/generateOTP');
+const sendOTPEmail = require('../utils/nodemailer');
 
 // Get all users
 exports.getAllUsers = async (req, res) => {
@@ -191,9 +193,38 @@ exports.loginUser = async (req, res) => {
 
 
 // Forget password
+// exports.forgetPassword = async (req, res) => {
+//     try {
+//         const { email, age, newPassword } = req.body;
+
+//         // Find the user by email
+//         const user = await Users.findOne({ email });
+//         if (!user) {
+//             return res.status(404).json({ message: 'User not found' });
+//         }
+
+//         // Verify the age
+//         if (user.age !== age) {
+//             return res.status(400).json({ message: 'Incorrect age provided' });
+//         }
+
+//         // Hash the new password
+//         const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+//         // Update the user's password
+//         user.password = hashedPassword;
+//         await user.save();
+
+//         res.status(200).json({ message: 'Password reset successfully' });
+//     } catch (error) {
+//         res.status(500).json({ message: 'Error resetting password', error });
+//     }
+// };
+
+
 exports.forgetPassword = async (req, res) => {
     try {
-        const { email, age, newPassword } = req.body;
+        const { email } = req.body;
 
         // Find the user by email
         const user = await Users.findOne({ email });
@@ -201,16 +232,47 @@ exports.forgetPassword = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Verify the age
-        if (user.age !== age) {
-            return res.status(400).json({ message: 'Incorrect age provided' });
+        // Generate OTP
+        const { otp, expires } = generateOTP();
+        
+        // Save OTP and expiration time to the user document
+        user.otp = otp;
+        user.otpExpires = expires;
+        await user.save();
+
+        // Send OTP to user's email
+        await sendOTPEmail(email, otp);
+
+        res.status(200).json({ message: 'OTP sent to email' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error generating OTP', error });
+    }
+};
+
+exports.verifyOTP = async (req, res) => {
+    try {
+        const { email, otp, newPassword } = req.body;
+
+        // Find the user by email
+        const user = await Users.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
         }
 
-        // Hash the new password
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        // Check if the OTP matches and is not expired
+        if (user.otp !== otp || user.otpExpires < Date.now()) {
+            return res.status(400).json({ message: 'Invalid or expired OTP' });
+        }
 
-        // Update the user's password
+        // Hash the new password and update it
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.password = hashedPassword;
+
+        // Clear OTP and expiration time fields
+        user.otp = undefined;
+        user.otpExpires = undefined;
+
+        // Save the updated user
         await user.save();
 
         res.status(200).json({ message: 'Password reset successfully' });
@@ -218,6 +280,10 @@ exports.forgetPassword = async (req, res) => {
         res.status(500).json({ message: 'Error resetting password', error });
     }
 };
+
+
+
+
 
 exports.getCurrentUserBookings = async (req, res) => {
     try {

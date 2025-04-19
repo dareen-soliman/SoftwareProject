@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  "start": "nodemon server.js"
-}
-,
+    "start": "nodemon server.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dareen-soliman/SoftwareProject.git"
@@ -27,6 +26,7 @@
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
+    "nodemailer": "^6.10.1",
     "nodeman": "^1.1.2",
     "nodemon": "^3.1.9"
   }

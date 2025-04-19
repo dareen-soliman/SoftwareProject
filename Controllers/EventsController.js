@@ -78,36 +78,46 @@ const eventController = {
 
   updateEvent: async (req, res) => {
     try {
-      const event = await Event.findById(req.params.id);
-      if (!event) {
-        return res.status(404).json({ message: "Event not found" });
-      }
+        const event = await Event.findById(req.params.id);
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
 
-      const isOrganizer = req.user._id === event.organizer.toString();
-      const isAdmin = req.user.role === "admin";
-      console.log(req.user._id, event.organizer.toString()); 
-    
-      if (!isOrganizer && !isAdmin) {
-        return res.status(403).json({ message: "Access denied" });
-      }
+        const isOrganizer = req.user._id === event.organizer.toString();
+        const isAdmin = req.user.role === "admin";
 
-      const { date, location, totalTickets, ticketPrice } = req.body;
+        // Restrict status updates to admins only
+        if (req.body.status && !isAdmin) {
+            return res.status(403).json({ message: "Only admins can change the status of an event" });
+        }
 
-      if (totalTickets < event.totalTickets - event.remainingTickets) {
-        return res.status(400).json({ message: "Insufficient tickets available for this update" });
-      }
+        // Allow organizers to update other fields, but not the status
+        if (!isOrganizer && !isAdmin) {
+            return res.status(403).json({ message: "Access denied" });
+        }
 
-      const updates = { date, location, totalTickets, ticketPrice };
-      if (updates.totalTickets !== undefined) {
-        updates.remainingTickets = Math.max(0, updates.totalTickets - (event.totalTickets - event.remainingTickets));
-      }
+        const { date, location, totalTickets, ticketPrice, status } = req.body;
 
-      const updatedEvent = await Event.findByIdAndUpdate(req.params.id, updates, { new: true });
-      res.status(200).json({ message: "Event updated", event: updatedEvent });
+        // Validate totalTickets update
+        if (totalTickets < event.totalTickets - event.remainingTickets) {
+            return res.status(400).json({ message: "Insufficient tickets available for this update" });
+        }
+
+        const updates = { date, location, totalTickets, ticketPrice };
+        if (isAdmin && status) {
+            updates.status = status; // Allow admins to update the status
+        }
+
+        if (updates.totalTickets !== undefined) {
+            updates.remainingTickets = Math.max(0, updates.totalTickets - (event.totalTickets - event.remainingTickets));
+        }
+
+        const updatedEvent = await Event.findByIdAndUpdate(req.params.id, updates, { new: true });
+        res.status(200).json({ message: "Event updated", event: updatedEvent });
     } catch (error) {
-      res.status(500).json({ message: "Internal server error", error: error.message });
+        res.status(500).json({ message: "Internal server error", error: error.message });
     }
-  },
+},
 
   deleteEvent: async (req, res) => {
     try {

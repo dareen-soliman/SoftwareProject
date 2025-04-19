@@ -7,7 +7,7 @@ const authorizationMiddleware = require('../Middleware/authorizationMiddleware')
 
 router.post("/",authorizationMiddleware(["organizer"]), eventController.createEvent);
 router.get("/", eventController.getAllApprovedEvents);
-router.get("/all", eventController.getAllEvents);
+router.get("/all", authorizationMiddleware(["admin"]) ,eventController.getAllEvents);
 router.get("/:id", eventController.getEventById);
 router.put("/:id", authorizationMiddleware(["organizer", "admin"]), eventController.updateEvent);
 router.delete("/:id",authorizationMiddleware(["organizer", "admin"]), eventController.deleteEvent);

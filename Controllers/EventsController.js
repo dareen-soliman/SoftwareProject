@@ -62,7 +62,7 @@ const eventController = {
     } catch (error) {
       res.status(500).json({ message: "Internal server error", error: error.message });
     }
-  },  // gets all approved events // 
+  }, 
 
   getEventById: async (req, res) => {
     try {
@@ -86,26 +86,25 @@ const eventController = {
         const isOrganizer = req.user._id === event.organizer.toString();
         const isAdmin = req.user.role === "admin";
 
-        // Restrict status updates to admins only
         if (req.body.status && !isAdmin) {
             return res.status(403).json({ message: "Only admins can change the status of an event" });
         }
 
-        // Allow organizers to update other fields, but not the status
+        
         if (!isOrganizer && !isAdmin) {
             return res.status(403).json({ message: "Access denied" });
         }
 
         const { date, location, totalTickets, ticketPrice, status } = req.body;
 
-        // Validate totalTickets update
+      
         if (totalTickets < event.totalTickets - event.remainingTickets) {
             return res.status(400).json({ message: "Insufficient tickets available for this update" });
         }
 
         const updates = { date, location, totalTickets, ticketPrice };
         if (isAdmin && status) {
-            updates.status = status; // Allow admins to update the status
+            updates.status = status;
         }
 
         if (updates.totalTickets !== undefined) {

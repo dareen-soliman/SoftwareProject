@@ -17,5 +17,4 @@ const authorize = require('../Middleware/authorizationMiddleware');
 
 
 
-
 module.exports = router;

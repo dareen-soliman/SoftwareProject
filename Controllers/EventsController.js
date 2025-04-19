@@ -39,14 +39,30 @@ const eventController = {
     }
   },
 
-  getAllEvents: async (req, res) => {
+  getAllApprovedEvents: async (req, res) => {
     try {
       const events = await Event.find({ status: "approved" }).populate("organizer", "name");
       res.status(200).json(events);
     } catch (error) {
       res.status(500).json({ message: "Internal server error", error: error.message });
     }
-  },                   // gets all approved events // 
+  },      
+  
+  
+  getAllEvents: async (req, res) => {
+    try {
+
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Access denied. Only admins can access this resource." });
+    }
+
+
+      const events = await Event.find({ status: { $in: ["approved", "pending", "declined"] } }).populate("organizer", "name");
+      res.status(200).json(events);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+  },  // gets all approved events // 
 
   getEventById: async (req, res) => {
     try {

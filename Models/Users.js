@@ -26,7 +26,9 @@ const userSchema = new mongoose.Schema({
         enum: ['standard', 'organizer', 'admin'], 
         default: 'standard' 
     },
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    otp: { type: String, default: null },  // Field to store OTP
+    otpExpires: { type: Date, default: null }, 
 });
 
 

@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser'); // Optional: if using cookies for
 require('dotenv').config();
 
 
+
 // Import your routes
 
 const loginRoute = require('./Routes/login'); // Import your login routes
@@ -18,7 +19,9 @@ const authenticationMiddleware = require('./Middleware/authenticationMiddleware'
 const app = express();
 
 
-
+app.get('/', (req, res) => {
+  res.send('Hello wow!'); // Test route
+});
 
 // Middleware setup
 
@@ -31,6 +34,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cookieParser());
+
 
 
 connectDB(); // Call the function that connects to your database

@@ -95,14 +95,14 @@ const eventController = {
             return res.status(403).json({ message: "Access denied" });
         }
 
-        const { date, location, totalTickets, ticketPrice, status } = req.body;
+        const { date, location, totalTickets, status } = req.body;
 
       
         if (totalTickets < event.totalTickets - event.remainingTickets) {
             return res.status(400).json({ message: "Insufficient tickets available for this update" });
         }
 
-        const updates = { date, location, totalTickets, ticketPrice };
+        const updates = { date, location, totalTickets };
         if (isAdmin && status) {
             updates.status = status;
         }
@@ -137,56 +137,10 @@ const eventController = {
     } catch (error) {
       res.status(500).json({ message: "Internal server error", error: error.message });
     }
-  },
+  },  
 
-  updateStatus: async (req, res) => {
-    try {
-      if (req.user.role !== "admin") {
-        return res.status(403).json({ message: "Only admins can approve/reject events" });
-      }
 
-      const { status } = req.body;
-      if (!["approved", "declined"].includes(status)) {
-        return res.status(400).json({ message: "Invalid status" });
-      }
 
-      const event = await Event.findByIdAndUpdate(
-        req.params.id,
-        { status },
-        { new: true }
-      );
-
-      if (!event) return res.status(404).json({ message: "Event not found" });
-
-      res.status(200).json({ message: `Event ${status}`, event });
-    } catch (error) {
-      res.status(500).json({ message: "Internal server error", error: error.message });
-    }
-  },
-
-  // getOrganizerAnalytics: async (req, res) => {
-  //   try {
-  //     if (req.user.role !== "organizer") {
-  //       return res.status(403).json({ message: "Access denied" });
-  //     }
-
-  //     const events = await Event.find({ organizer: req.user.userId });
-
-  //     const analytics = events.map((event) => {
-  //       const booked = event.totalTickets - event.remainingTickets;
-  //       const percentageBooked = ((booked / event.totalTickets) * 100).toFixed(2);
-
-  //       return {
-  //         title: event.title,
-  //         percentageBooked,
-  //       };
-  //     });
-
-  //     res.status(200).json(analytics);
-  //   } catch (error) {
-  //     res.status(500).json({ message: "Internal server error", error: error.message });
-  //   }
-  // },
 };
 
 module.exports = eventController;

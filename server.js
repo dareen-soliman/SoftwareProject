@@ -25,7 +25,14 @@ app.get('/', (req, res) => {
 
 // Middleware setup
 
-app.use(express.json());
+app.use((req, res, next) => {
+  if (req.method === 'GET') {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
+
 app.use(cookieParser());
 
 

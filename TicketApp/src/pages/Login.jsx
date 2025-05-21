@@ -45,6 +45,9 @@ function Login() {
           onChange={e => setPassword(e.target.value)}
           required
         /><br />
+        <p>
+  Forgot your password? <a href="/forgot-password">Reset it here</a>
+</p>
         <button type="submit">Login</button>
       </form>
       {error && <p style={{color:"red"}}>{error}</p>}

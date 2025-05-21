@@ -9,7 +9,7 @@ import EventDetails from "./pages/EventDetails";
 import AdminEvents from "./events/AdminEvents";
 import MyEvents from "./events/MyEvents";
 import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
+
 
 
 function App() {
@@ -21,7 +21,6 @@ function App() {
         <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
 
 <Route path="/forgot-password" element={<ForgotPassword />} />
-<Route path="/reset-password/:token" element={<ResetPassword />} />
 
 
         <Route

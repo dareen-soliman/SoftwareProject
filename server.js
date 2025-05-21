@@ -1,29 +1,26 @@
-// server.js
-
 const express = require('express');
-const connectDB = require("./config/db"); // Import database connection logic
-const cookieParser = require('cookie-parser'); // Optional: if using cookies for authentication
+const cors = require('cors');  // <-- add this
+const connectDB = require("./config/db");
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
-
-
-// Import your routes
-
-const loginRoute = require('./Routes/login'); // Import your login routes
-const usersRoute = require('./Routes/users'); // Import your user routes
-const bookingRoutes = require('./Routes/bookings'); 
-const eventRoutes = require('./Routes/events'); 
+const loginRoute = require('./Routes/login');
+const usersRoute = require('./Routes/users');
+const bookingRoutes = require('./Routes/bookings');
+const eventRoutes = require('./Routes/events');
 const authenticationMiddleware = require('./Middleware/authenticationMiddleware');
 
-// Initialize the Express app
 const app = express();
 
+// Add this before your routes and middleware:
+app.use(cors({
+  origin: 'http://localhost:5173',  // allow your frontend origin
+  credentials: true,                 // if you use cookies/auth headers
+}));
 
 app.get('/', (req, res) => {
-  res.send('Hello wow!'); // Test route
+  res.send('Hello wow!');
 });
-
-// Middleware setup
 
 app.use((req, res, next) => {
   if (req.method === 'GET') {
@@ -35,28 +32,18 @@ app.use((req, res, next) => {
 
 app.use(cookieParser());
 
+connectDB();
 
+app.use('/api/v1', loginRoute);
 
-connectDB(); // Call the function that connects to your database
-
-
-app.use('/api/v1', loginRoute); // Use the user routes
-///// Routes
-
-app.use(authenticationMiddleware);
+//app.use(authenticationMiddleware); to test
 
 app.use('/api/v1/users', usersRoute);
 app.use('/api/v1/bookings', bookingRoutes);
-app.use("/api/v1/events", eventRoutes); 
+app.use("/api/v1/events", eventRoutes);
 
+const port = process.env.PORT || 3000;
 
-
-
-
-// Set the port (use an environment variable if available)
-const port = process.env.PORT || 3000; // Default to port 5000
-
-// Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

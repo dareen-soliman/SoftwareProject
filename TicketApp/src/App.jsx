@@ -49,7 +49,7 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/Dashboard" element={<Dashboard />} />
       <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
-      <Route path="/" element={<EventList />} />
+      <Route path="/events" element={<EventList />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/events/:id" element={<EventDetails />} />
 

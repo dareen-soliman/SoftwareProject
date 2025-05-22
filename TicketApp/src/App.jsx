@@ -4,16 +4,13 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import EventList from "./pages/EventList";
+import EventDetails from "./pages/EventDetails";
+import AdminEventsPage from "./events/AdminEvents";
+import MyEventsPage from "./events/MyEvents";
+import EventForm from "./events/EventForm";
+import EventAnalytics from "./events/EventAnalytics";
 import ForgotPassword from "./pages/ForgotPassword";
-
-
-// Components (from components folder)
-import EventList from "./components/EventList";
-import EventDetails from "./components/EventDetails";
-import MyEventsPage from "./components/MyEventsPage";
-import EventForm from "./components/EventForm";
-import EventAnalytics from "./components/EventAnalytics";
-import AdminEventsPage from "./components/AdminEventsPage";
 
 // Organizer route
 function OrganizerLayout({ children }) {
@@ -21,73 +18,6 @@ function OrganizerLayout({ children }) {
     <>
       <Navbar />
       {children}
-=========
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
-
-<Route path="/forgot-password" element={<ForgotPassword />} />
-
-
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <>
-                <Navbar />
-                <Dashboard />
-              </>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/events"
-          element={
-            <ProtectedRoute>
-              <>
-                <Navbar />
-                <EventList />
-              </>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/events/:id"
-          element={
-            <ProtectedRoute>
-              <>
-                <Navbar />
-                <EventDetails />
-              </>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin-events"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <>
-                <Navbar />
-                <AdminEvents />
-              </>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/my-events"
-          element={
-            <ProtectedRoute allowedRoles={["organizer"]}>
-              <>
-                <Navbar />
-                <MyEvents />
-              </>
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
->>>>>>>>> Temporary merge branch 2
     </>
   );
 }
@@ -117,21 +47,11 @@ function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/Dashboard" element={<Dashboard />} />
       <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
 
-<Route path="/forgot-password" element={<ForgotPassword />} />
-<Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
 
-
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Navbar />
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
 
       {/* Standard/public user */}
       <Route

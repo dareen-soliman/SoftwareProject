@@ -18,7 +18,7 @@ function Login() {
       if (token) {
         localStorage.setItem("token", token);
         // Redirect to events page
-        navigate("/events");
+        navigate("/dashboard");
       } else {
         setError("Invalid login response");
       }

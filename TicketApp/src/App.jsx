@@ -5,9 +5,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
-
-// Components (from components folder)
+// Components
 import EventList from "./components/EventList";
 import EventDetails from "./components/EventDetails";
 import MyEventsPage from "./components/MyEventsPage";
@@ -15,95 +15,26 @@ import EventForm from "./components/EventForm";
 import EventAnalytics from "./components/EventAnalytics";
 import AdminEventsPage from "./components/AdminEventsPage";
 
-// Organizer route
+// Layouts
+function StandardLayout({ children }) {
+  return (
+    <>
+      <Navbar />
+      {children}
+    </>
+  );
+}
+
 function OrganizerLayout({ children }) {
   return (
     <>
       <Navbar />
       {children}
-=========
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
-
-<Route path="/forgot-password" element={<ForgotPassword />} />
-
-
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <>
-                <Navbar />
-                <Dashboard />
-              </>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/events"
-          element={
-            <ProtectedRoute>
-              <>
-                <Navbar />
-                <EventList />
-              </>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/events/:id"
-          element={
-            <ProtectedRoute>
-              <>
-                <Navbar />
-                <EventDetails />
-              </>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin-events"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <>
-                <Navbar />
-                <AdminEvents />
-              </>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/my-events"
-          element={
-            <ProtectedRoute allowedRoles={["organizer"]}>
-              <>
-                <Navbar />
-                <MyEvents />
-              </>
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
->>>>>>>>> Temporary merge branch 2
     </>
   );
 }
 
-// Admin route
 function AdminLayout({ children }) {
-  return (
-    <>
-      <Navbar />
-      {children}
-    </>
-  );
-}
-
-// Public/standard user route
-function StandardLayout({ children }) {
   return (
     <>
       <Navbar />
@@ -115,25 +46,25 @@ function StandardLayout({ children }) {
 function App() {
   return (
     <Routes>
+      {/* Public Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-<Route path="/forgot-password" element={<ForgotPassword />} />
-<Route path="/reset-password/:token" element={<ResetPassword />} />
-
-
+      {/* Protected Dashboard */}
       <Route
         path="/dashboard"
         element={
           <ProtectedRoute>
-            <Navbar />
-            <Dashboard />
+            <StandardLayout>
+              <Dashboard />
+            </StandardLayout>
           </ProtectedRoute>
         }
       />
 
-      {/* Standard/public user */}
+      {/* Standard/Public Events */}
       <Route
         path="/events"
         element={
@@ -155,7 +86,7 @@ function App() {
         }
       />
 
-      {/* Organizer-only routes */}
+      {/* Organizer Routes */}
       <Route
         path="/my-events"
         element={
@@ -197,7 +128,7 @@ function App() {
         }
       />
 
-      {/* Admin-only route */}
+      {/* Admin Routes */}
       <Route
         path="/admin/events"
         element={

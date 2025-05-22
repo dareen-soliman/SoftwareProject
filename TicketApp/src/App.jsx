@@ -4,27 +4,15 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-
-// Components
 import EventList from "./components/EventList";
 import EventDetails from "./components/EventDetails";
+import EventAnalytics from "./components/EventAnalytics";
+import ForgotPassword from "./pages/ForgotPassword";
 import MyEventsPage from "./components/MyEventsPage";
 import EventForm from "./components/EventForm";
-import EventAnalytics from "./components/EventAnalytics";
-import AdminEventsPage from "./components/AdminEventsPage";
+import AdminEventsPage from "./events/AdminEvents";
 
-// Layouts
-function StandardLayout({ children }) {
-  return (
-    <>
-      <Navbar />
-      {children}
-    </>
-  );
-}
-
+// Organizer route
 function OrganizerLayout({ children }) {
   return (
     <>
@@ -34,7 +22,18 @@ function OrganizerLayout({ children }) {
   );
 }
 
+// Admin route
 function AdminLayout({ children }) {
+  return (
+    <>
+      <Navbar />
+      {children}
+    </>
+  );
+}
+
+// Public/standard user route
+function StandardLayout({ children }) {
   return (
     <>
       <Navbar />
@@ -46,25 +45,15 @@ function AdminLayout({ children }) {
 function App() {
   return (
     <Routes>
-      {/* Public Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/Dashboard" element={<Dashboard />} />
+      <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
+
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-      {/* Protected Dashboard */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <StandardLayout>
-              <Dashboard />
-            </StandardLayout>
-          </ProtectedRoute>
-        }
-      />
 
-      {/* Standard/Public Events */}
+      {/* Standard/public user */}
       <Route
         path="/events"
         element={
@@ -86,7 +75,7 @@ function App() {
         }
       />
 
-      {/* Organizer Routes */}
+      {/* Organizer-only routes */}
       <Route
         path="/my-events"
         element={
@@ -128,7 +117,7 @@ function App() {
         }
       />
 
-      {/* Admin Routes */}
+      {/* Admin-only route */}
       <Route
         path="/admin/events"
         element={
@@ -146,4 +135,4 @@ function App() {
   );
 }
 
-export default App;
+export default App;

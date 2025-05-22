@@ -8,20 +8,29 @@ import EventList from "./pages/EventList";
 import EventDetails from "./pages/EventDetails";
 import AdminEvents from "./events/AdminEvents";
 import MyEvents from "./events/MyEvents";
+import ForgotPassword from "./pages/ForgotPassword";
+
+
 
 function App() {
   return (
     <>
-      <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
+
+<Route path="/forgot-password" element={<ForgotPassword />} />
+
 
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <>
+                <Navbar />
+                <Dashboard />
+              </>
             </ProtectedRoute>
           }
         />
@@ -29,7 +38,10 @@ function App() {
           path="/events"
           element={
             <ProtectedRoute>
-              <EventList />
+              <>
+                <Navbar />
+                <EventList />
+              </>
             </ProtectedRoute>
           }
         />
@@ -37,7 +49,10 @@ function App() {
           path="/events/:id"
           element={
             <ProtectedRoute>
-              <EventDetails />
+              <>
+                <Navbar />
+                <EventDetails />
+              </>
             </ProtectedRoute>
           }
         />
@@ -45,7 +60,10 @@ function App() {
           path="/admin-events"
           element={
             <ProtectedRoute allowedRoles={["admin"]}>
-              <AdminEvents />
+              <>
+                <Navbar />
+                <AdminEvents />
+              </>
             </ProtectedRoute>
           }
         />
@@ -53,7 +71,10 @@ function App() {
           path="/my-events"
           element={
             <ProtectedRoute allowedRoles={["organizer"]}>
-              <MyEvents />
+              <>
+                <Navbar />
+                <MyEvents />
+              </>
             </ProtectedRoute>
           }
         />

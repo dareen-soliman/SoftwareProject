@@ -4,13 +4,13 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import EventList from "./pages/EventList";
-import EventDetails from "./pages/EventDetails";
-import AdminEventsPage from "./events/AdminEvents";
-import MyEventsPage from "./events/MyEvents";
-import EventForm from "./events/EventForm";
-import EventAnalytics from "./events/EventAnalytics";
+import EventList from "./components/EventList";
+import EventDetails from "./components/EventDetails";
+import EventAnalytics from "./components/EventAnalytics";
 import ForgotPassword from "./pages/ForgotPassword";
+import MyEventsPage from "./components/MyEventsPage";
+import EventForm from "./components/EventForm";
+import AdminEventsPage from "./events/AdminEvents";
 
 // Organizer route
 function OrganizerLayout({ children }) {

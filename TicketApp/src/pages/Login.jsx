@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/api"; // your axios instance
+import api from "../services/api"; 
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -17,7 +17,7 @@ function Login() {
       const token = res.data.token;
       if (token) {
         localStorage.setItem("token", token);
-        // Redirect to events page
+        // Redirect to dasboard page
         navigate("/dashboard");
       } else {
         setError("Invalid login response");

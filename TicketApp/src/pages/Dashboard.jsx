@@ -1,24 +1,32 @@
 // src/pages/Dashboard.jsx
-import React from 'react';
-import { useAuth } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import api from "../services/api";
 
 function Dashboard() {
-  const { user } = useAuth();
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await api.get("/v1/users/profile");
+        setUser(res.data); // should contain _id and role
+      } catch (err) {
+        setError("Failed to fetch user data");
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  if (error) return <p>{error}</p>;
+  if (!user) return <p>Loading user data...</p>;
 
   return (
-    <div style={{ padding: "2rem" }}>
+    <div>
       <h1>Dashboard</h1>
-      <p>Welcome, <strong>{user?.name || 'User'}</strong>!</p>
-      <p><strong>Role:</strong> {user?.role || 'Not specified'}</p>
-
-      <h3>Your Profile</h3>
-      <p>Email: {user?.email || 'Not available'}</p>
-
-      <p>
-        Want to update your profile?{' '}
-        <Link to="/profile">Go to Profile Page</Link>
-      </p>
+      <p>User ID: <strong>{user._id}</strong></p>
+      <p>Role: <strong>{user.role}</strong></p>
     </div>
   );
 }

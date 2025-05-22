@@ -36,7 +36,7 @@ connectDB();
 
 app.use('/api/v1', loginRoute);
 
-//app.use(authenticationMiddleware); to test
+app.use(authenticationMiddleware);
 
 app.use('/api/v1/users', usersRoute);
 app.use('/api/v1/bookings', bookingRoutes);

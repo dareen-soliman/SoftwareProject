@@ -21,16 +21,76 @@ function OrganizerLayout({ children }) {
     <>
       <Navbar />
       {children}
-    </>
-  );
-}
-
+=========
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
 
 <Route path="/forgot-password" element={<ForgotPassword />} />
+
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <>
+                <Navbar />
+                <Dashboard />
+              </>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/events"
+          element={
+            <ProtectedRoute>
+              <>
+                <Navbar />
+                <EventList />
+              </>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/events/:id"
+          element={
+            <ProtectedRoute>
+              <>
+                <Navbar />
+                <EventDetails />
+              </>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin-events"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <>
+                <Navbar />
+                <AdminEvents />
+              </>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/my-events"
+          element={
+            <ProtectedRoute allowedRoles={["organizer"]}>
+              <>
+                <Navbar />
+                <MyEvents />
+              </>
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+>>>>>>>>> Temporary merge branch 2
+    </>
+  );
+}
 
 // Admin route
 function AdminLayout({ children }) {
@@ -59,8 +119,9 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
 
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
+<Route path="/forgot-password" element={<ForgotPassword />} />
+<Route path="/reset-password/:token" element={<ResetPassword />} />
+
 
       <Route
         path="/dashboard"

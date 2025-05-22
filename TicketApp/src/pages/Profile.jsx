@@ -1,37 +1,39 @@
-// src/pages/Profile.jsx
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
 function Profile() {
-  const { id } = useParams(); // Get user ID from URL
-  const [userDetails, setUserDetails] = useState(null);
+  const [user, setUser] = useState(null);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserDetails = async () => {
+    const fetchUser = async () => {
       try {
-        const res = await api.get(`/v1/users/${id}`);
-        setUserDetails(res.data);
+        const res = await api.get("/v1/users/profile");
+        setUser(res.data);
       } catch (err) {
-        setError("Failed to load profile");
+        setError("Failed to fetch user data");
       }
     };
 
-    fetchUserDetails();
-  }, [id]);
+    fetchUser();
+  }, []);
+
+
 
   if (error) return <p>{error}</p>;
-  if (!userDetails) return <p>Loading profile...</p>;
+  if (!user) return <p>Loading user data...</p>;
 
   return (
     <div>
-      <h1>User Profile</h1>
-      <p><strong>ID:</strong> {userDetails._id}</p>
-      <p><strong>Name:</strong> {userDetails.name}</p>
-      <p><strong>Email:</strong> {userDetails.email}</p>
-      <p><strong>Age:</strong> {userDetails.age}</p>
-      <p><strong>Role:</strong> {userDetails.role}</p>
+      <h1>Profile</h1>
+      <p><strong>User ID:</strong> {user._id}</p>
+      <p><strong>Role:</strong> {user.role}</p>
+      <p><strong>First Name:</strong> {user.firstName}</p>
+      <p><strong>Last Name:</strong> {user.lastName}</p>
+      <p><strong>Email:</strong> {user.email}</p>
+      <p><strong>Age:</strong> {user.age}</p>
     </div>
   );
 }

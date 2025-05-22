@@ -9,7 +9,7 @@ function EventList() {
   useEffect(() => {
     const fetchApprovedEvents = async () => {
       try {
-        const response = await api.get("/events");
+        const response = await api.get("/v1/events");
         setEvents(response.data);
       } catch (error) {
         console.error("Error fetching approved events:", error);

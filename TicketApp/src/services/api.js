@@ -1,8 +1,17 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000/api", 
-  withCredentials: true, 
+  baseURL: "http://localhost:3000/api",
+  withCredentials: true, // for cookies, not for Authorization header
+});
+
+// Add token to headers
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 export default api;

@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
+
 
 // Components (from components folder)
 import EventList from "./components/EventList";
@@ -24,6 +24,13 @@ function OrganizerLayout({ children }) {
     </>
   );
 }
+
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
+
+<Route path="/forgot-password" element={<ForgotPassword />} />
 
 // Admin route
 function AdminLayout({ children }) {

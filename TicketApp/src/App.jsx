@@ -49,11 +49,11 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/Dashboard" element={<Dashboard />} />
       <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
-
+      <Route path="/" element={<EventList />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/events/:id" element={<EventDetails />} />
 
-
-      {/* Standard/public user */}
+      {/* Standard/public user
       <Route
         path="/events"
         element={
@@ -63,8 +63,8 @@ function App() {
             </StandardLayout>
           </ProtectedRoute>
         }
-      />
-      <Route
+      /> */}
+      {/* <Route
         path="/events/:id"
         element={
           <ProtectedRoute>
@@ -73,7 +73,7 @@ function App() {
             </StandardLayout>
           </ProtectedRoute>
         }
-      />
+      /> */}
 
       {/* Organizer-only routes */}
       <Route

@@ -1,24 +1,19 @@
-// src/pages/Dashboard.jsx
-import React from 'react';
-import { useAuth } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
+// src/pages/Nav.jsx
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
-  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleGoToDashboard = () => {
+    navigate("/profile");
+  };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Dashboard</h1>
-      <p>Welcome, <strong>{user?.name || 'User'}</strong>!</p>
-      <p><strong>Role:</strong> {user?.role || 'Not specified'}</p>
-
-      <h3>Your Profile</h3>
-      <p>Email: {user?.email || 'Not available'}</p>
-
-      <p>
-        Want to update your profile?{' '}
-        <Link to="/profile">Go to Profile Page</Link>
-      </p>
+    <div>
+      <h2>Welcome to Your Dashboard!</h2>
+      <p>You are now logged in.</p>
+      <button onClick={handleGoToDashboard}>Go to Profile</button>
     </div>
   );
 }

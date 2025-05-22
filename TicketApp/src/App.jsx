@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
 import EventList from "./components/EventList";
 import EventDetails from "./components/EventDetails";
 import EventAnalytics from "./components/EventAnalytics";
@@ -11,6 +11,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 import MyEventsPage from "./components/MyEventsPage";
 import EventForm from "./components/EventForm";
 import AdminEventsPage from "./events/AdminEvents";
+import Dashboard from "./pages/Dashboard";
+
 
 // Organizer route
 function OrganizerLayout({ children }) {
@@ -46,8 +48,9 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/Dashboard" element={<Dashboard />} />
+      <Route path="/Profile" element={<Profile />} />
       <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
       <Route path="/events" element={<EventList />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />

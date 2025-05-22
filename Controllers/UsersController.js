@@ -72,9 +72,32 @@ exports.updateUserById = async (req, res) => {
     }
   };
   
+// exports.getCurrentUser = async (req, res) => {
+//   res.send(req.user);
+// };
 exports.getCurrentUser = async (req, res) => {
-  res.send(req.user);
+    try {
+        const user = await Users.findById(req.user._id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const filteredUser = {
+            _id: user._id,
+            role: user.role,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            age: user.age
+        };
+
+        res.status(200).json(filteredUser);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching current user', error });
+    }
 };
+
 
 // Controllers/userController.js
 exports.updateUser = async (req, res) => {

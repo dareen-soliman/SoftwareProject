@@ -11,6 +11,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import MyEventsPage from "./components/MyEventsPage";
 import EventForm from "./components/EventForm";
 import AdminEventsPage from "./events/AdminEvents";
+import Profile from "./pages/Profile";
 
 // Organizer route
 function OrganizerLayout({ children }) {
@@ -48,6 +49,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/Dashboard" element={<Dashboard />} />
+      <Route path="/profile/:id" element={<Profile />} />
       <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
       <Route path="/events" element={<EventList />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />

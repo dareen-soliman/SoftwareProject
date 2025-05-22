@@ -49,6 +49,7 @@ function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<Dashboard />} />
+       <Route path="/my-events" element={<MyEventsPage />} />
       <Route path="/register" element={<Register />} />
       <Route path="/Profile" element={<Profile />} />
       <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
@@ -79,7 +80,7 @@ function App() {
       /> */}
 
       {/* Organizer-only routes */}
-      <Route
+      {/* <Route
         path="/my-events"
         element={
           <ProtectedRoute allowedRoles={["organizer"]}>
@@ -88,7 +89,7 @@ function App() {
             </OrganizerLayout>
           </ProtectedRoute>
         }
-      />
+      /> */}
       <Route
         path="/my-events/new"
         element={

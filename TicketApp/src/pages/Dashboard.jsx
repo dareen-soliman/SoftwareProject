@@ -5,15 +5,21 @@ import { useNavigate } from "react-router-dom";
 function Dashboard() {
   const navigate = useNavigate();
 
-  const handleGoToDashboard = () => {
+  const handleGoToProfile = () => {
     navigate("/profile");
   };
+    const handleGoToMyEvents = () => {
+    navigate("/events");
+  };
+
+ 
 
   return (
     <div>
       <h2>Welcome to Your Dashboard!</h2>
       <p>You are now logged in.</p>
-      <button onClick={handleGoToDashboard}>Go to Profile</button>
+      <button onClick={handleGoToProfile}>Go to Profile</button>
+       <button onClick={handleGoToMyEvents}>View All Events</button>
     </div>
   );
 }

@@ -57,8 +57,7 @@ function App() {
       <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="/register" element={<Register />} />
       {/* <Route path="/Profile" element={<Profile />} /> */}
-      <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
-      <Route path="/events" element={<EventList />} />
+      <Route path="/logout" element={<Navbar showLogoutOnly={true} />} /> 
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/events/:id" element={<EventDetails />} />
 
@@ -71,7 +70,11 @@ function App() {
          <Route path="/user-bookings" element={<UserBookings />} />
       <Route path="/bookings/:id" element={<BookingDetails />} />
       </Route>
-
+ 
+  <Route element={<ProtectedRoute allowedRoles={["standard"]} />}>
+         <Route path="/user-bookings" element={<UserBookings />} />
+      <Route path="/bookings/:id" element={<BookingDetails />} />
+      </Route>
       {/* Standard/public user
       <Route
         path="/events"

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
-
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer,
 } from "recharts";
@@ -19,13 +18,11 @@ const EventAnalytics = () => {
       return;
     }
 
-    // Fetch all events created by this organizer
-    api.get(`/events?organizer=${user._id}`)
+    api.get(`/v1/users/events/analytics`)
       .then(res => {
-        // Map event data: ticketsBooked = totalTickets - remainingTickets
         const data = res.data.map(event => ({
           name: event.title,
-          ticketsBooked: event.totalTickets - event.remainingTickets,
+          ticketsBooked: event.ticketsSold, // ✅ Use correct backend field
         }));
         setEvents(data);
       })
@@ -34,12 +31,11 @@ const EventAnalytics = () => {
   }, [user, navigate]);
 
   if (loading) return <p>Loading analytics...</p>;
-
   if (events.length === 0) return <p>No events found to analyze.</p>;
 
   return (
     <div>
-      <h2>Ticket Booking Analytics</h2>
+      <h2 className="text-xl font-bold mb-4">Ticket Booking Analytics</h2>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={events} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />

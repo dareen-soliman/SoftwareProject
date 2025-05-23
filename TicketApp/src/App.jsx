@@ -56,8 +56,8 @@ function App() {
 
               <Route path="/my-events/new" element={<EventForm />} />
         <Route path="/my-events/:id/edit" element={<EventForm />} />
+        <Route path="/my-events/analytics" element={<EventAnalytics />} />
 
-    
       <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="/register" element={<Register />} />
       {/* <Route path="/Profile" element={<Profile />} /> */}

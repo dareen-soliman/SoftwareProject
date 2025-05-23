@@ -1,6 +1,8 @@
+// src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/api"; 
+import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 function parseJwt(token) {
   try {
@@ -15,27 +17,24 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
       const res = await api.post('/v1/login', { email, password });
-      // Assuming backend sends token in res.data.token
       const token = res.data.token;
+
       if (token) {
         localStorage.setItem("token", token);
 
-        // Decode token to get user role (assuming JWT)
         const decoded = parseJwt(token);
-        if (decoded && decoded.role) {
-          localStorage.setItem("role", decoded.role);
-        } else {
-          // fallback role if role not in token
-          localStorage.setItem("role", "standard");
-        }
+        const role = decoded?.role || "standard";
 
-        // Redirect to dashboard page
+        localStorage.setItem("role", role);
+        login({ ...decoded, role }); // Set user in AuthContext
+
         navigate("/dashboard");
       } else {
         setError("Invalid login response");
@@ -71,7 +70,7 @@ function Login() {
         </p>
         <button type="submit">Login</button>
       </form>
-      {error && <p style={{color:"red"}}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 }

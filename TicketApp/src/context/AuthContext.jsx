@@ -6,15 +6,21 @@ const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
+function parseJwt(token) {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return null;
+  }
+}
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // Set user data after login (called from Login component)
   const login = (userData) => {
     setUser(userData);
   };
 
-  // Logout function clears user and token
   const logout = async () => {
     try {
       await axios.post("/api/users/logout");
@@ -23,18 +29,18 @@ export const AuthProvider = ({ children }) => {
     }
     setUser(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
   };
 
   useEffect(() => {
-    // On app load, check if token exists, then fetch user profile
     const token = localStorage.getItem("token");
     if (token) {
-      axios
-        .get("/api/users/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => setUser(res.data))
-        .catch(() => setUser(null));
+      const decoded = parseJwt(token);
+      if (decoded) {
+        setUser({ ...decoded, role: decoded.role || "standard" });
+      } else {
+        setUser(null);
+      }
     }
   }, []);
 

@@ -11,7 +11,9 @@ function Dashboard() {
     const handleGoToMyEvents = () => {
     navigate("/events");
   };
-
+   const handleGoToMyBookings = () => {
+    navigate("/user-bookings");
+  };
  
 
   return (
@@ -20,6 +22,7 @@ function Dashboard() {
       <p>You are now logged in.</p>
       <button onClick={handleGoToProfile}>Go to Profile</button>
        <button onClick={handleGoToMyEvents}>View All Events</button>
+        <button onClick={handleGoToMyBookings}>View My Bookings</button>
     </div>
   );
 }

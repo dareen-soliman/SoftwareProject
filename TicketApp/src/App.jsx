@@ -12,6 +12,7 @@ import MyEventsPage from "./components/MyEventsPage";
 import EventForm from "./components/EventForm";
 import AdminEventsPage from "./events/AdminEvents";
 import Dashboard from "./pages/Dashboard";
+import UserBookings from "./pages/UserBookings";
 
 
 // Organizer route
@@ -50,6 +51,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<Dashboard />} />
        <Route path="/my-events" element={<MyEventsPage />} />
+      <Route path="/user-bookings" element={<UserBookings />} />
       <Route path="/register" element={<Register />} />
       <Route path="/Profile" element={<Profile />} />
       <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />

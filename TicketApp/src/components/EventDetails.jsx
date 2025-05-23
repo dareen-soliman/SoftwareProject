@@ -1,6 +1,6 @@
+// src/pages/EventDetails.jsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import BookTicketForm from "../components/BookTicketForm";
@@ -31,42 +31,16 @@ const EventDetails = () => {
     fetchEvent();
   }, [id]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-gray-600 text-lg">
-        Loading event details...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-red-600 text-lg">
-        {error}
-      </div>
-    );
-  }
-
-  if (!event) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-gray-500 text-lg">
-        Event not found.
-      </div>
-    );
-  }
+  if (loading) return <div className="text-center">Loading event details...</div>;
+  if (error) return <div className="text-center text-red-600">{error}</div>;
+  if (!event) return <div className="text-center">Event not found.</div>;
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
       <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl">
-        <img
-          src={event.image}
-          alt={event.title}
-          className="w-full max-h-96 object-cover rounded-xl mb-6"
-        />
+        <img src={event.image} alt={event.title} className="w-full max-h-96 object-cover rounded-xl mb-6" />
 
-        <h1 className="text-4xl font-bold text-center text-blue-800 mb-4">
-          {event.title}
-        </h1>
+        <h1 className="text-4xl font-bold text-center text-blue-800 mb-4">{event.title}</h1>
 
         <div className="text-gray-700 text-center space-y-2 mb-6">
           <p><strong>Date:</strong> {new Date(event.date).toLocaleString()}</p>
@@ -76,14 +50,22 @@ const EventDetails = () => {
           <p><strong>Available Tickets:</strong> {event.remainingTickets}</p>
         </div>
 
-        <p className="mb-8 text-center text-gray-800 whitespace-pre-line">
-          {event.description}
-        </p>
-
-        {user ? (
+        <p className="mb-8 text-center text-gray-800 whitespace-pre-line">{event.description}</p>
+<h2 className="text-xl font-semibold text-blue-900 mb-4">🎟️ Book Your Ticket</h2>
+        {user && user.role === "standard" ? (
           <div className="bg-blue-50 border border-blue-200 p-6 rounded-xl text-center">
-            <h2 className="text-xl font-semibold text-blue-900 mb-4">🎟️ Book Your Ticket</h2>
+            
             <BookTicketForm event={event} />
+          </div>
+        ) : user ? (
+          <div className="text-center text-gray-600">
+            You must be logged in as standard user to book tickets.
+             <button
+              onClick={() => navigate("/login")}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full shadow transition-all"
+            >
+              Go to Login
+            </button>
           </div>
         ) : (
           <div className="text-center mt-4">

@@ -1,4 +1,3 @@
-// src/pages/EventList.jsx
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import EventCard from "./EventCard.jsx";

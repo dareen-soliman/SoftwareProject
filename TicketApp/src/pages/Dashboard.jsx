@@ -9,7 +9,7 @@ function Dashboard() {
     navigate("/profile");
   };
     const handleGoToAllEvents = () => {
-    navigate("/events");
+    navigate("/");
   };
    const handleGoToMyBookings = () => {
     navigate("/user-bookings");

@@ -67,15 +67,6 @@ const MyEventsPage = () => {
     }
   };
 
-  const startEdit = (event) => {
-    setEditId(event._id);
-    setEditForm({
-      date: event.date ? event.date.slice(0, 10) : "",
-      location: event.location || "",
-      totalTickets: event.totalTickets || "",
-      status: event.status || "pending",
-    });
-  };
 
   if (loading) return <p>Loading...</p>;
   if (!user) return <p>Loading user...</p>;
@@ -163,12 +154,7 @@ const MyEventsPage = () => {
                 <p>Location: {event.location}</p>
                 <p>Tickets: {event.totalTickets}</p>
                 <p>Status: {event.status}</p>
-                <button
-                  onClick={() => startEdit(event)}
-                  className="bg-blue-500 text-white px-3 py-1 rounded mr-2"
-                >
-                  Edit
-                </button>
+               
                 <button
                   onClick={() => handleDelete(event._id)}
                   className="bg-red-500 text-white px-3 py-1 rounded"

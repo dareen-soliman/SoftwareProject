@@ -17,6 +17,14 @@ function Dashboard() {
     const handleGoToMyEvents = () => {
     navigate("/my-events");
   };
+      const handleGoToAdminevent = () => {
+    navigate("/admin/events");
+  };
+
+     const handleGoToAdminUser = () => {
+    navigate("/admin/users");
+  };
+  
  
 
   return (
@@ -27,6 +35,9 @@ function Dashboard() {
        <button onClick={handleGoToAllEvents}>View All Events</button>
         <button onClick={handleGoToMyBookings}>View My Bookings</button>
         <button onClick={handleGoToMyEvents}>View My Events</button>
+        <button onClick={handleGoToAdminevent}>View Admin Events</button>
+        <button onClick={handleGoToAdminUser}>View Admin Users</button>
+        
     </div>
   );
 }

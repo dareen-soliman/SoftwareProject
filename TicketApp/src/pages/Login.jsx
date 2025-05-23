@@ -66,6 +66,9 @@ function Login() {
         <p>
           Forgot your password? <a href="/forgot-password">Reset it here</a>
         </p>
+        <p>
+            Don't have an account? <a href="/register">Register here</a>
+        </p>
         <button type="submit">Login</button>
       </form>
       {error && <p style={{color:"red"}}>{error}</p>}

@@ -7,7 +7,9 @@ function Navbar({ showLogoutOnly }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();              // Clear auth info
+    logout();  // Clear auth info
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");  
     navigate('/login');    // Redirect to login
   };
 

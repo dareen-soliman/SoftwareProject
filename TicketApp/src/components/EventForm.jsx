@@ -37,11 +37,15 @@ const EventForm = () => {
         .get(`/v1/events/${id}`)
         .then((res) => {
           const event = res.data;
-          if (event.organizer._id !== user._id) {
-            alert("You are not authorized to edit this event");
-            navigate("/my-events");
-            return;
-          }
+          const organizerId =
+  typeof event.organizer === "object" ? event.organizer._id : event.organizer;
+
+if (String(organizerId) !== String(user._id)) {
+  alert("You are not authorized to edit this event");
+  navigate("/my-events");
+  return;
+}
+
           setFormData({
             title: event.title,
             description: event.description || "",

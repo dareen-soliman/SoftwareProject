@@ -52,7 +52,7 @@ function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       {/* <Route path="/dashboard" element={<Dashboard />} /> */}
-       <Route path="/my-events" element={<MyEventsPage />} />
+       
       <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="/register" element={<Register />} />
       {/* <Route path="/Profile" element={<Profile />} /> */}
@@ -94,7 +94,7 @@ function App() {
       /> */}
 
       {/* Organizer-only routes */}
-      {/* <Route
+      {/* { <Route
         path="/my-events"
         element={
           <ProtectedRoute allowedRoles={["organizer"]}>
@@ -103,7 +103,11 @@ function App() {
             </OrganizerLayout>
           </ProtectedRoute>
         }
-      /> */}
+      /> } */}
+      <Route element={<ProtectedRoute allowedRoles={["organizer","admin"]} />}>
+         <Route path="/my-events" element={<MyEventsPage />} />
+      </Route>
+
       <Route
         path="/my-events/new"
         element={

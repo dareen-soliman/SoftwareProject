@@ -11,10 +11,15 @@ import ForgotPassword from "./pages/ForgotPassword";
 import MyEventsPage from "./components/MyEventsPage";
 import EventForm from "./components/EventForm";
 import AdminEventsPage from "./events/AdminEvents";
+import AdminEventManagement from "./pages/AdminEventManagement";
 import Dashboard from "./pages/Dashboard";
 import UserBookings from "./pages/UserBookings";
 import BookingDetails from "./pages/BookingDetails";
 import Unauthorized from "./pages/Unauthorized";
+import AdminUsersPage from "./pages/AdminUsersPage";
+import UserRow from "./components/UserRow";
+import UpdateUserRoleModal from "./components/UpdateUserRoleModal";
+import ConfirmationDialog from "./components/ConfirmationDialog";
 
 
 // Organizer route
@@ -52,11 +57,11 @@ function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       {/* <Route path="/dashboard" element={<Dashboard />} /> */}
-       <Route path="/my-events" element={<MyEventsPage />} />
+     
 
-              <Route path="/my-events/new" element={<EventForm />} />
+              {/* <Route path="/my-events/new" element={<EventForm />} />
         <Route path="/my-events/:id/edit" element={<EventForm />} />
-        <Route path="/my-events/analytics" element={<EventAnalytics />} />
+        <Route path="/my-events/analytics" element={<EventAnalytics />} /> */}
 
       <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="/register" element={<Register />} />
@@ -74,7 +79,22 @@ function App() {
       <Route element={<ProtectedRoute allowedRoles={["standard"]} />}>
          <Route path="/user-bookings" element={<UserBookings />} />
       <Route path="/bookings/:id" element={<BookingDetails />} />
+
       </Route>
+
+      <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+      <Route path="/admin/events" element={<AdminEventManagement />} />
+      <Route path="/admin/users" element={<AdminUsersPage />} />
+      </Route>
+
+
+      <Route element={<ProtectedRoute allowedRoles={["organizer"]} />}>
+        <Route path="/my-events" element={<MyEventsPage />} />
+       <Route path="/my-events/new" element={<EventForm />} />
+        <Route path="/my-events/:id/edit" element={<EventForm />} />
+        <Route path="/my-events/analytics" element={<EventAnalytics />} />
+      </Route>
+
 
       {/* Standard/public user
       <Route
@@ -109,7 +129,7 @@ function App() {
           </ProtectedRoute>
         }
       /> */}
-      <Route
+      {/* <Route
         path="/my-events/new"
         element={
           <ProtectedRoute allowedRoles={["organizer"]}>
@@ -141,7 +161,7 @@ function App() {
       />
 
       {/* Admin-only route */}
-      <Route
+      {/* <Route
         path="/admin/events"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
@@ -150,7 +170,7 @@ function App() {
             </AdminLayout>
           </ProtectedRoute>
         }
-      />
+      /> */} 
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/login" />} />

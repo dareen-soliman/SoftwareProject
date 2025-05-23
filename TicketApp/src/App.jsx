@@ -62,7 +62,7 @@ function App() {
       <Route path="/register" element={<Register />} />
       {/* <Route path="/Profile" element={<Profile />} /> */}
       <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
-      <Route path="/events" element={<EventList />} />
+      <Route path="/" element={<EventList />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/events/:id" element={<EventDetails />} />
 

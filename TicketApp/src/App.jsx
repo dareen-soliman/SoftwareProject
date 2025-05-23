@@ -51,6 +51,7 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/my-events/analytics" element={<EventAnalytics />} />
       {/* <Route path="/dashboard" element={<Dashboard />} /> */}
         <Route path="/my-events/new" element={<EventForm />} />
         <Route path="/my-events/:id/edit" element={<EventForm />} />

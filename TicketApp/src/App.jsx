@@ -53,6 +53,11 @@ function App() {
       <Route path="/login" element={<Login />} />
       {/* <Route path="/dashboard" element={<Dashboard />} /> */}
        <Route path="/my-events" element={<MyEventsPage />} />
+
+              <Route path="/my-events/new" element={<EventForm />} />
+        <Route path="/my-events/:id/edit" element={<EventForm />} />
+
+    
       <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="/register" element={<Register />} />
       {/* <Route path="/Profile" element={<Profile />} /> */}

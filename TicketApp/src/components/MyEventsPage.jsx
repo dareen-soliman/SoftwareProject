@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ Add this
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
 
 const MyEventsPage = () => {
   const { user } = useAuth();
+  const navigate = useNavigate(); // ✅ Initialize navigate
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editId, setEditId] = useState(null);
@@ -81,7 +83,16 @@ const MyEventsPage = () => {
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">My Events</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold">My Events</h2>
+        <button
+          onClick={() => navigate("/my-events/new")} // ✅ Navigate to create page
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Create New Event
+        </button>
+      </div>
+
       {events.length === 0 ? (
         <p>No events found.</p>
       ) : (
@@ -119,12 +130,22 @@ const MyEventsPage = () => {
                     <option value="rejected">Rejected</option>
                   </select>
                 )}
-                <button onClick={() => handleEditSave(event._id)} className="bg-green-500 text-white px-3 py-1 rounded">Save</button>
-                <button onClick={() => setEditId(null)} className="ml-2 bg-gray-400 text-white px-3 py-1 rounded">Cancel</button>
+                <button onClick={() => handleEditSave(event._id)} className="bg-green-500 text-white px-3 py-1 rounded">
+                  Save
+                </button>
+                <button onClick={() => setEditId(null)} className="ml-2 bg-gray-400 text-white px-3 py-1 rounded">
+                  Cancel
+                </button>
               </div>
             ) : (
               <>
-                <h3 className="font-semibold">{event.title}</h3>
+                <h3
+  className="font-semibold text-blue-600 cursor-pointer hover:underline"
+  onClick={() => navigate(`/my-events/${event._id}/edit`)}
+>
+  {event.title}
+</h3>
+
                 <p>Date: {event.date ? event.date.slice(0, 10) : "N/A"}</p>
                 <p>Location: {event.location}</p>
                 <p>Tickets: {event.totalTickets}</p>

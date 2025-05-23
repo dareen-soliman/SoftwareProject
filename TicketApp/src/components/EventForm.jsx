@@ -10,6 +10,9 @@ const EventForm = () => {
 
   const [formData, setFormData] = useState({
     title: "",
+    description: "",
+    category: "",
+    image: "",
     date: "",
     location: "",
     totalTickets: "",
@@ -31,18 +34,35 @@ const EventForm = () => {
     if (id) {
       setLoading(true);
       api
-        .get(`/events/${id}`)
+        .get(`/v1/events/${id}`)
         .then((res) => {
           const event = res.data;
-          // Make sure this user owns the event
-          if (event.organizer._id !== user._id) {
+
+          const organizerId =
+            typeof event.organizer === "object"
+              ? event.organizer._id || event.organizer.id
+              : event.organizer;
+
+          const userId = user?.id || user?._id;
+
+          if (!userId) {
+            alert("User not loaded");
+            navigate("/login");
+            return;
+          }
+
+          if (String(organizerId).trim() !== String(userId).trim()) {
             alert("You are not authorized to edit this event");
             navigate("/my-events");
             return;
           }
+
           setFormData({
             title: event.title,
-            date: event.date.slice(0, 10), // format yyyy-mm-dd for input[type=date]
+            description: event.description || "",
+            category: event.category || "",
+            image: event.image || "",
+            date: event.date?.slice(0, 10),
             location: event.location,
             totalTickets: event.totalTickets,
             ticketPrice: event.ticketPrice,
@@ -65,41 +85,57 @@ const EventForm = () => {
     e.preventDefault();
     setError("");
 
-    // Basic validation
-    if (!formData.title || !formData.date || !formData.location || !formData.totalTickets || !formData.ticketPrice) {
+    const {
+      title,
+      description,
+      category,
+      image,
+      date,
+      location,
+      totalTickets,
+      ticketPrice,
+    } = formData;
+
+    if (
+      (!id && !title) ||
+      !description ||
+      !category ||
+      !image ||
+      !date ||
+      !location ||
+      !totalTickets ||
+      !ticketPrice
+    ) {
       setError("All fields are required.");
       return;
     }
 
-    if (Number(formData.totalTickets) < 1 || Number(formData.ticketPrice) < 0) {
+    if (Number(totalTickets) < 1 || Number(ticketPrice) < 0) {
       setError("Ticket count must be at least 1 and price cannot be negative.");
       return;
     }
 
     try {
       setLoading(true);
+      const payload = {
+        title,
+        description,
+        category,
+        image,
+        date,
+        location,
+        totalTickets: Number(totalTickets),
+        ticketPrice: Number(ticketPrice),
+      };
 
-      if (id) {
-        // Update existing event
-        await api.put(`/events/${id}`, {
-          title: formData.title,
-          date: formData.date,
-          location: formData.location,
-          totalTickets: Number(formData.totalTickets),
-          ticketPrice: Number(formData.ticketPrice),
-        });
-        alert("Event updated successfully");
-      } else {
-        // Create new event
-        await api.post("/events", {
-          title: formData.title,
-          date: formData.date,
-          location: formData.location,
-          totalTickets: Number(formData.totalTickets),
-          ticketPrice: Number(formData.ticketPrice),
-        });
+      if (!id) {
+        await api.post("/v1/events", payload);
         alert("Event created successfully");
+      } else {
+        await api.put(`/v1/events/${id}`, payload);
+        alert("Event updated successfully");
       }
+
       navigate("/my-events");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to save event");
@@ -115,12 +151,46 @@ const EventForm = () => {
       <h2>{id ? "Edit Event" : "Create New Event"}</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleSubmit}>
+        {!id && (
+          <div>
+            <label>Title</label><br />
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        )}
+
         <div>
-          <label>Title</label><br />
+          <label>Description</label><br />
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div>
+          <label>Category</label><br />
           <input
             type="text"
-            name="title"
-            value={formData.title}
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div>
+          <label>Image URL</label><br />
+          <input
+            type="text"
+            name="image"
+            value={formData.image}
             onChange={handleChange}
             required
           />

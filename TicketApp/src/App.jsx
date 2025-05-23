@@ -13,6 +13,8 @@ import EventForm from "./components/EventForm";
 import AdminEventsPage from "./events/AdminEvents";
 import Dashboard from "./pages/Dashboard";
 import UserBookings from "./pages/UserBookings";
+import BookingDetails from "./pages/BookingDetails";
+import Unauthorized from "./pages/Unauthorized";
 
 
 // Organizer route
@@ -49,15 +51,25 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route path="/dashboard" element={<Dashboard />} />
+      {/* <Route path="/dashboard" element={<Dashboard />} /> */}
        <Route path="/my-events" element={<MyEventsPage />} />
-      <Route path="/user-bookings" element={<UserBookings />} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/Profile" element={<Profile />} />
+      {/* <Route path="/Profile" element={<Profile />} /> */}
       <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
       <Route path="/events" element={<EventList />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/events/:id" element={<EventDetails />} />
+
+        <Route element={<ProtectedRoute allowedRoles={["admin", "standard", "organizer"]} />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
+      </Route>
+
+      <Route element={<ProtectedRoute allowedRoles={["standard"]} />}>
+         <Route path="/user-bookings" element={<UserBookings />} />
+      <Route path="/bookings/:id" element={<BookingDetails />} />
+      </Route>
 
       {/* Standard/public user
       <Route

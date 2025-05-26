@@ -1,7 +1,7 @@
 // src/events/MyEvents.jsx
 import React, { useEffect, useState } from 'react';
 import api from "../services/api";
-
+import '../styles/dashboard.css';
 
 function MyEvents() {
   const [events, setEvents] = useState([]);
@@ -14,20 +14,42 @@ function MyEvents() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <p>Loading your events...</p>;
+  if (loading) {
+    return (
+      <div className="main-content">
+        <div className="loading-state">Loading your events...</div>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h1>My Events</h1>
-      {events.length === 0 && <p>You have no events.</p>}
-      <ul>
+    <div className="main-content">
+      <h1 className="dashboard-title">My Events</h1>
+      {events.length === 0 && (
+        <div className="empty-state">
+          <p>You have no events.</p>
+          <button className="dashboard-button">Create New Event</button>
+        </div>
+      )}
+      <div className="dashboard-grid">
         {events.map(event => (
-          <li key={event.id}>
-            {event.title} — {new Date(event.date).toLocaleDateString()} — {event.location} — ${event.price}
-            {/* Edit and Delete buttons can be added here */}
-          </li>
+          <div key={event.id} className="dashboard-card">
+            <h3 className="event-title">{event.title}</h3>
+            <div className="event-meta">
+              <span>📍 {event.location}</span>
+              <span>📅 {new Date(event.date).toLocaleDateString()}</span>
+            </div>
+            <p className="event-description">{event.description}</p>
+            <div className="event-details">
+              <p className="event-price">🎟️ ${event.price}</p>
+              <div className="event-actions">
+                <button className="dashboard-button">Edit</button>
+                <button className="dashboard-button delete-button">Delete</button>
+              </div>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

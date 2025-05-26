@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import EventCard from "./EventCard.jsx";
+import '../styles/dashboard.css';
 
 function EventList() {
   const [events, setEvents] = useState([]);
@@ -19,9 +20,9 @@ function EventList() {
   }, []);
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Approved Events</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="main-content">
+      <h1 className="dashboard-title">Upcoming Events</h1>
+      <div className="dashboard-grid">
         {events.map((event) => (
           <EventCard key={event._id} event={event} />
         ))}

@@ -1,91 +1,151 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "../services/api";
+import '../styles/dashboard.css';
 
 const BookTicketForm = ({ event }) => {
   const [quantity, setQuantity] = useState(1);
-  const [bookingStatus, setBookingStatus] = useState(null); // success or error messages
+  const [bookingStatus, setBookingStatus] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const maxTickets = event.remainingTickets;
+  const maxTickets = Math.max(1, event.remainingTickets || 1);
+
+  // Reset quantity if maxTickets changes
+  useEffect(() => {
+    setQuantity(Math.min(quantity, maxTickets));
+  }, [maxTickets]);
 
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value, 10);
-    if (value > 0 && value <= maxTickets) {
-      setQuantity(value);
-      setBookingStatus(null);
-    } else if (value > maxTickets) {
-      setBookingStatus(`Only ${maxTickets} tickets available.`);
-    } else {
-      setQuantity(1);
-      setBookingStatus(null);
-    }
+    // Ensure the value is within bounds
+    const validatedValue = Math.min(Math.max(1, value), maxTickets);
+    console.log('Quantity changed to:', validatedValue); // Debug log
+    setQuantity(validatedValue);
+    setBookingStatus(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setBookingStatus(null);
 
+    // Validate quantity before submission
     if (quantity < 1 || quantity > maxTickets) {
       setBookingStatus(`Please select a valid quantity (1 to ${maxTickets}).`);
       return;
     }
 
     setLoading(true);
+    console.log('Attempting to book tickets:', { // Debug log
+      eventId: event._id,
+      quantity: quantity,
+      maxTickets: maxTickets
+    });
 
     try {
+      // Token is handled by api interceptor
       const response = await api.post("/v1/bookings", {
         eventId: event._id,
-        ticketsBooked: quantity,
+        ticketsBooked: quantity
       });
 
-      setBookingStatus(`Booking successful! You booked ${quantity} ticket(s).`);
-      // Optionally: reset quantity or do other UI updates
+      console.log('Booking response:', response.data); // Debug log
+
+      if (response.data) {
+        setBookingStatus(`Success! You've booked ${quantity} ticket${quantity > 1 ? 's' : ''}.`);
+        // Reset quantity after successful booking
+        setQuantity(1);
+      }
     } catch (error) {
-      console.error("Booking error:", error);
-      // Show error message from backend if available
-      const message =
-        error.response?.data?.message || "Booking failed. Please try again.";
-      setBookingStatus(message);
+      console.error("Booking error:", error.response || error);
+      let errorMessage = "Booking failed. Please try again.";
+      
+      if (error.response) {
+        if (error.response.status === 401) {
+          errorMessage = "Please log in to book tickets.";
+        } else if (error.response.data?.message) {
+          errorMessage = error.response.data.message;
+        }
+      }
+      
+      setBookingStatus(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <label className="block">
-        Quantity:
-        <input
-          type="number"
-          min="1"
-          max={maxTickets}
-          value={quantity}
-          onChange={handleQuantityChange}
-          className="ml-2 border rounded px-2 py-1 w-20"
-          disabled={loading}
-        />
-      </label>
-
-      <p>
-        Total Price: <strong>${(event.ticketPrice * quantity).toFixed(2)}</strong>
-      </p>
-
-      <button
-        type="submit"
-        className={`px-4 py-2 rounded text-white ${
-          loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-        }`}
-        disabled={loading}
-      >
-        {loading ? "Booking..." : "Book"}
-      </button>
-
-      {bookingStatus && (
-        <p className={`mt-2 ${bookingStatus.includes("successful") ? "text-green-600" : "text-red-600"}`}>
-          {bookingStatus}
+    <div className="booking-form-container">
+      <h3 className="booking-title">Book Your Tickets</h3>
+      
+      <div className="event-summary">
+        <p className="event-info">
+          <strong>Event:</strong> {event.title}
         </p>
-      )}
-    </form>
+        <p className="event-info">
+          <strong>Date:</strong> {new Date(event.date).toLocaleDateString()}
+        </p>
+        <p className="event-info">
+          <strong>Location:</strong> {event.location}
+        </p>
+        <p className="event-info">
+          <strong>Available Tickets:</strong> {maxTickets}
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="booking-form">
+        <div className="quantity-selector">
+          <label className="quantity-label">
+            <strong>Select Quantity:</strong> <span className="quantity-value">{quantity}</span>
+          </label>
+          <div className="slider-container">
+            <input
+              type="range"
+              min="1"
+              max={maxTickets}
+              value={quantity}
+              onChange={handleQuantityChange}
+              className="ticket-slider"
+              disabled={loading || maxTickets <= 1}
+              step="1"
+            />
+            <div className="slider-labels">
+              <span>1</span>
+              <span>{maxTickets}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="price-summary">
+          <p className="price-per-ticket">
+            <strong>Price per ticket:</strong> ${event.ticketPrice}
+          </p>
+          <p className="total-price">
+            <strong>Total Price:</strong> <span className="price-value">${(event.ticketPrice * quantity).toFixed(2)}</span>
+          </p>
+        </div>
+
+        <button
+          type="submit"
+          className={`booking-submit-button ${loading ? 'loading' : ''}`}
+          disabled={loading || maxTickets < 1}
+        >
+          {loading ? (
+            <span className="loading-text">
+              <i className="fas fa-spinner fa-spin"></i> Processing...
+            </span>
+          ) : (
+            <span className="button-text">
+              <i className="fas fa-ticket-alt"></i> {maxTickets < 1 ? 'Sold Out' : 'Confirm Booking'}
+            </span>
+          )}
+        </button>
+
+        {bookingStatus && (
+          <div className={`booking-status ${bookingStatus.includes("Success") ? "success" : "error"}`}>
+            {bookingStatus}
+          </div>
+        )}
+      </form>
+    </div>
   );
 };
 

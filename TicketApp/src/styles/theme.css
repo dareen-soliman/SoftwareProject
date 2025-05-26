@@ -1,0 +1,167 @@
+:root {
+  /* Primary Colors */
+  --color-primary: #8B4513;      /* Saddle Brown - for primary actions and accents */
+  --color-primary-light: #A0522D; /* Sienna - lighter version for hover states */
+  --color-primary-dark: #654321;  /* Dark Brown - for darker accents */
+
+  /* Background Colors */
+  --color-bg-main: #F5F5DC;      /* Beige - main background */
+  --color-bg-secondary: #FAF0E6;  /* Linen - secondary background */
+  --color-bg-accent: #DEB887;     /* Burlywood - accent background */
+
+  /* Text Colors */
+  --color-text-primary: #3E2723;  /* Dark Brown - primary text */
+  --color-text-secondary: #5D4037; /* Brown - secondary text */
+  --color-text-light: #8D6E63;    /* Light Brown - lighter text */
+  --color-text-white: #FFF8DC;    /* Cornsilk - text on dark backgrounds */
+
+  /* Border Colors */
+  --color-border: #D7CCC8;        /* Light Brown - borders */
+  --color-border-dark: #8B4513;   /* Saddle Brown - darker borders */
+
+  /* Status Colors */
+  --color-success: #2E7D32;       /* Green */
+  --color-error: #C62828;         /* Red */
+  --color-warning: #F9A825;       /* Yellow */
+  --color-info: #1565C0;          /* Blue */
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Border Radius */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Global Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-bg-main);
+  color: var(--color-text-primary);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--color-primary-light);
+}
+
+/* Button Styles */
+.btn {
+  background-color: var(--color-primary);
+  color: var(--color-text-white);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: var(--color-primary-light);
+}
+
+.btn-secondary {
+  background-color: var(--color-bg-accent);
+  color: var(--color-text-primary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-border);
+}
+
+/* Card Styles */
+.card {
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Form Styles */
+input, textarea, select {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-sm);
+  width: 100%;
+  margin-bottom: var(--spacing-md);
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--spacing-lg);
+}
+
+th, td {
+  padding: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+th {
+  background-color: var(--color-bg-accent);
+  color: var(--color-text-primary);
+}
+
+/* Alert/Message Styles */
+.alert {
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.alert-success {
+  background-color: var(--color-success);
+  color: var(--color-text-white);
+}
+
+.alert-error {
+  background-color: var(--color-error);
+  color: var(--color-text-white);
+}
+
+.alert-warning {
+  background-color: var(--color-warning);
+  color: var(--color-text-primary);
+}
+
+.alert-info {
+  background-color: var(--color-info);
+  color: var(--color-text-white);
+} 

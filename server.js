@@ -34,13 +34,13 @@ app.use(cookieParser());
 
 connectDB();
 
+// Public routes that don't require authentication
 app.use('/api/v1', loginRoute);
+app.use("/api/v1/events", eventRoutes); // Making events publicly accessible
 
-app.use(authenticationMiddleware);
-
-app.use('/api/v1/users', usersRoute);
-app.use('/api/v1/bookings', bookingRoutes);
-app.use("/api/v1/events", eventRoutes);
+// Protected routes that require authentication
+app.use('/api/v1/users', authenticationMiddleware, usersRoute);
+app.use('/api/v1/bookings', authenticationMiddleware, bookingRoutes);
 
 const port = process.env.PORT || 3000;
 

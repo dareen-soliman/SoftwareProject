@@ -1,6 +1,11 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './styles/dashboard.css';
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./contexts/AuthContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
@@ -21,161 +26,63 @@ import UserRow from "./components/UserRow";
 import UpdateUserRoleModal from "./components/UpdateUserRoleModal";
 import ConfirmationDialog from "./components/ConfirmationDialog";
 
-
-// Organizer route
-function OrganizerLayout({ children }) {
+function Layout({ children }) {
   return (
-    <>
+    <div className="app-container">
       <Navbar />
       {children}
-    </>
-  );
-}
-
-// Admin route
-function AdminLayout({ children }) {
-  return (
-    <>
-      <Navbar />
-      {children}
-    </>
-  );
-}
-
-// Public/standard user route
-function StandardLayout({ children }) {
-  return (
-    <>
-      <Navbar />
-      {children}
-    </>
+      <Footer />
+    </div>
   );
 }
 
 function App() {
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      {/* <Route path="/dashboard" element={<Dashboard />} /> */}
-     
+    <AuthProvider>
+      <div className="app-wrapper">
+        <ToastContainer />
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<Layout><EventList /></Layout>} />
+          <Route path="/login" element={<Layout><Login /></Layout>} />
+          <Route path="/register" element={<Layout><Register /></Layout>} />
+          <Route path="/unauthorized" element={<Layout><Unauthorized /></Layout>} />
+          <Route path="/forgot-password" element={<Layout><ForgotPassword /></Layout>} />
+          <Route path="/events/:id" element={<Layout><EventDetails /></Layout>} />
+          <Route path="/logout" element={<Layout><Navbar showLogoutOnly={true} /></Layout>} />
 
-              {/* <Route path="/my-events/new" element={<EventForm />} />
-        <Route path="/my-events/:id/edit" element={<EventForm />} />
-        <Route path="/my-events/analytics" element={<EventAnalytics />} /> */}
+          {/* Protected routes for all authenticated users */}
+          <Route element={<ProtectedRoute allowedRoles={["admin", "standard", "organizer"]} />}>
+            <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
+            <Route path="/profile" element={<Layout><Profile /></Layout>} />
+          </Route>
 
-      <Route path="/unauthorized" element={<Unauthorized />} />
-      <Route path="/register" element={<Register />} />
-      {/* <Route path="/Profile" element={<Profile />} /> */}
-      <Route path="/logout" element={<Navbar showLogoutOnly={true} />} />
-      <Route path="/" element={<EventList />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/events/:id" element={<EventDetails />} />
+          {/* Standard user routes */}
+          <Route element={<ProtectedRoute allowedRoles={["standard"]} />}>
+            <Route path="/user-bookings" element={<Layout><UserBookings /></Layout>} />
+            <Route path="/bookings/:id" element={<Layout><BookingDetails /></Layout>} />
+          </Route>
 
-        <Route element={<ProtectedRoute allowedRoles={["admin", "standard", "organizer"]} />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
-      </Route>
+          {/* Admin routes */}
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+            <Route path="/admin/events" element={<Layout><AdminEventManagement /></Layout>} />
+            <Route path="/admin/users" element={<Layout><AdminUsersPage /></Layout>} />
+          </Route>
 
-      <Route element={<ProtectedRoute allowedRoles={["standard"]} />}>
-         <Route path="/user-bookings" element={<UserBookings />} />
-      <Route path="/bookings/:id" element={<BookingDetails />} />
+          {/* Organizer routes */}
+          <Route element={<ProtectedRoute allowedRoles={["organizer"]} />}>
+            <Route path="/my-events" element={<Layout><MyEventsPage /></Layout>} />
+            <Route path="/my-events/new" element={<Layout><EventForm /></Layout>} />
+            <Route path="/my-events/:id/edit" element={<Layout><EventForm /></Layout>} />
+            <Route path="/my-events/analytics" element={<Layout><EventAnalytics /></Layout>} />
+          </Route>
 
-      </Route>
-
-      <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-      <Route path="/admin/events" element={<AdminEventManagement />} />
-      <Route path="/admin/users" element={<AdminUsersPage />} />
-      </Route>
-
-
-      <Route element={<ProtectedRoute allowedRoles={["organizer"]} />}>
-        <Route path="/my-events" element={<MyEventsPage />} />
-       <Route path="/my-events/new" element={<EventForm />} />
-        <Route path="/my-events/:id/edit" element={<EventForm />} />
-        <Route path="/my-events/analytics" element={<EventAnalytics />} />
-      </Route>
-
-
-      {/* Standard/public user
-      <Route
-        path="/events"
-        element={
-          <ProtectedRoute>
-            <StandardLayout>
-              <EventList />
-            </StandardLayout>
-          </ProtectedRoute>
-        }
-      /> */}
-      {/* <Route
-        path="/events/:id"
-        element={
-          <ProtectedRoute>
-            <StandardLayout>
-              <EventDetails />
-            </StandardLayout>
-          </ProtectedRoute>
-        }
-      /> */}
-
-      {/* Organizer-only routes */}
-      {/* <Route
-        path="/my-events"
-        element={
-          <ProtectedRoute allowedRoles={["organizer"]}>
-            <OrganizerLayout>
-              <MyEventsPage />
-            </OrganizerLayout>
-          </ProtectedRoute>
-        }
-      /> */}
-      {/* <Route
-        path="/my-events/new"
-        element={
-          <ProtectedRoute allowedRoles={["organizer"]}>
-            <OrganizerLayout>
-              <EventForm />
-            </OrganizerLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/my-events/:id/edit"
-        element={
-          <ProtectedRoute allowedRoles={["organizer"]}>
-            <OrganizerLayout>
-              <EventForm />
-            </OrganizerLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/my-events/analytics"
-        element={
-          <ProtectedRoute allowedRoles={["organizer"]}>
-            <OrganizerLayout>
-              <EventAnalytics />
-            </OrganizerLayout>
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Admin-only route */}
-      {/* <Route
-        path="/admin/events"
-        element={
-          <ProtectedRoute allowedRoles={["admin"]}>
-            <AdminLayout>
-              <AdminEventsPage />
-            </AdminLayout>
-          </ProtectedRoute>
-        }
-      /> */} 
-
-      {/* Fallback */}
-      <Route path="*" element={<Navigate to="/login" />} />
-    </Routes>
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+      </div>
+    </AuthProvider>
   );
 }
 
-export default App;
+export default App;

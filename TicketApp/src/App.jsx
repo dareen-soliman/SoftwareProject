@@ -5,7 +5,7 @@ import './styles/dashboard.css';
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
@@ -15,16 +15,13 @@ import EventAnalytics from "./components/EventAnalytics";
 import ForgotPassword from "./pages/ForgotPassword";
 import MyEventsPage from "./components/MyEventsPage";
 import EventForm from "./components/EventForm";
-import AdminEventsPage from "./events/AdminEvents";
 import AdminEventManagement from "./pages/AdminEventManagement";
 import Dashboard from "./pages/Dashboard";
 import UserBookings from "./pages/UserBookings";
 import BookingDetails from "./pages/BookingDetails";
 import Unauthorized from "./pages/Unauthorized";
 import AdminUsersPage from "./pages/AdminUsersPage";
-import UserRow from "./components/UserRow";
-import UpdateUserRoleModal from "./components/UpdateUserRoleModal";
-import ConfirmationDialog from "./components/ConfirmationDialog";
+
 
 function Layout({ children }) {
   return (

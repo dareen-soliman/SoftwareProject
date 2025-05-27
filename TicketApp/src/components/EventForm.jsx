@@ -118,15 +118,20 @@ const EventForm = () => {
     try {
       setLoading(true);
       const payload = {
-        title,
-        description,
-        category,
-        image,
-        date,
-        location,
-        totalTickets: Number(totalTickets),
-        ticketPrice: Number(ticketPrice),
-      };
+  title,
+  description,
+  category,
+  image,
+  date,
+  location,
+  totalTickets: Number(totalTickets),
+  ticketPrice: Number(ticketPrice),
+  ...( !id && { organizer: user?._id || user?.id } )
+   // Include organizer only when creating
+};
+console.log("Payload being sent:", payload);
+
+
 
       if (!id) {
         await api.post("/v1/events", payload);

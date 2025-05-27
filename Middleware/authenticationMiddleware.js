@@ -18,8 +18,10 @@ module.exports = function authenticationMiddleware(req, res, next) {
         error: error.message,
       });
     }
+  console.log("Decoded JWT payload:", decoded);
+  
+   req.user = { _id: decoded._id || decoded.id, role: decoded.role };
 
-    req.user = { _id: decoded.id, role: decoded.role };
     next();
   });
 };
